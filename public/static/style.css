@@ -1,1 +1,23 @@
-body { font-family: Cantarell,sans-serif; font-size: 120%; }
+body {
+    font-family: Cantarell,sans-serif;
+    font-size: 120%;
+    max-width: 40em;
+    margin: 0 auto;
+    padding: 0 1em 1em 1em;
+    line-height: 1.6;
+}
+
+header {
+    text-align: center;
+}
+
+a.title {
+    text-decoration: underline;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+a.button {
+    text-decoration: none;
+    cursor: pointer;
+}

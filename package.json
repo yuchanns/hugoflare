@@ -8,7 +8,9 @@
     "deploy": "$npm_execpath run build && wrangler pages deploy --branch=production"
   },
   "dependencies": {
-    "hono": "^4.4.7"
+    "drizzle-orm": "^0.31.2",
+    "hono": "^4.4.7",
+    "marked": "^13.0.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240529.0",

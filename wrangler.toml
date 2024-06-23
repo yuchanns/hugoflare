@@ -1,21 +1,7 @@
 name = "blockflare"
 pages_build_output_dir = "./dist"
 
-# [vars]
-# MY_VAR = "my-variable"
-
-# [[kv_namespaces]]
-# binding = "MY_KV_NAMESPACE"
-# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-
-# [[r2_buckets]]
-# binding = "MY_BUCKET"
-# bucket_name = "my-bucket"
-
-# [[d1_databases]]
-# binding = "DB"
-# database_name = "my-database"
-# database_id = ""
-
-# [ai]
-# binding = "AI"
+[[d1_databases]]
+binding = "DATABASE"
+database_name = "block-db"
+database_id = "82f8691f-954f-43b2-a687-ea9a9bcf0fe2"
