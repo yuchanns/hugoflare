@@ -2,6 +2,7 @@ import { Hono } from 'hono'
 import { renderer } from './components'
 import { getHomepageMetadata, getPost, getPosts } from './db'
 import { marked } from 'marked'
+import { HTTPException } from 'hono/http-exception'
 
 type Bindings = {
   DATABASE: D1Database
@@ -27,11 +28,29 @@ const app = new Hono<{ Bindings: Bindings }>()
 
 app.use(renderer)
 
+app.notFound((_c) => {
+  throw new HTTPException(404, { message: "NotFound" })
+})
+
+app.onError((err, c) => {
+  return c.render(<>
+    <header>
+      <h1>{(err instanceof HTTPException) ? `${err.status} ${err.message}` : `500 ${err.message}`}</h1>
+    </header>
+    <p><a class="button"
+      hx-trigger="click"
+      hx-get="/"
+      hx-swap="innerHTML"
+      hx-target="body"
+      hx-push-url="true">Back to home</a></p>
+  </>, { title: err.message })
+})
+
 app.get('/post/:id', async (c) => {
   const id = c.req.param('id')
   const post = await getPost(c.env.DATABASE, id)
   if (!post) {
-    return c.text("not found", 404)
+    return c.notFound()
   }
   const date = new Date(post.created_at)
   return c.render(<>
