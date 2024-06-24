@@ -1,0 +1,40 @@
+name: Deploy
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+  push:
+    branches:
+    - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
+    steps:
+    - uses: actions/checkout@v4
+    - uses: pnpm/action-setup@v3
+      with:
+          version: latest
+          run_install: true
+    - name: Deploy
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      run: |
+        # Check if database is created
+        pnpm add -g wrangler
+        [ -n "$(wrangler d1 list --json | jq '.[] | select(.name=="block-db") | .uuid' | tr -d '\n"')" ] || wrangler d1 create block-db
+        sed -i -e "s/82f8691f-954f-43b2-a687-ea9a9bcf0fe2/$(wrangler d1 list --json | jq '.[] | select(.name=="block-db") | .uuid' | tr -d '\n"')/g" wrangler.toml
+        # Create sqlite tables if not exists
+        wrangler d1 execute block-db --file=./schema.sql --remote
+        pnpm run deploy
+    - name: Delete workflow runs
+      uses: Mattraks/delete-workflow-runs@v2
+      with:
+        token: ${{ github.token }}
+        repository: ${{ github.repository }}
+        retain_days: 0
+        keep_minimum_runs: 2
