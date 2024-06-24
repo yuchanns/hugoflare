@@ -3,9 +3,26 @@ import { renderer } from './components'
 import { getHomepageMetadata, getPost, getPosts } from './db'
 import { marked } from 'marked'
 import { HTTPException } from 'hono/http-exception'
+import { jwt, sign } from 'hono/jwt'
 
 type Bindings = {
   DATABASE: D1Database
+  JWT_SECRET: string
+  ADMIN: string
+  PASSWD: string
+}
+
+const auth = "token"
+
+const back = () => {
+  return <p><a class="button"
+    hx-trigger="click"
+    hx-get="/"
+    hx-swap="innerHTML"
+    hx-target="body"
+    hx-push-url="true"
+    dangerouslySetInnerHTML={{ __html: "Back to home" }}
+  /></p>
 }
 
 const ellipsisText = (text: string, maxLength: number) => {
@@ -33,17 +50,67 @@ app.notFound((_c) => {
 })
 
 app.onError((err, c) => {
+  if (err instanceof HTTPException && err.status == 401) {
+    return c.redirect('/console-login')
+  }
   return c.render(<>
     <header>
-      <h1>{(err instanceof HTTPException) ? `${err.status} ${err.message}` : `500 ${err.message}`}</h1>
+      <h1 dangerouslySetInnerHTML={{ __html: (err instanceof HTTPException) ? `${err.status} ${err.message}` : `500 ${err.message}` }} />
     </header>
-    <p><a class="button"
-      hx-trigger="click"
-      hx-get="/"
-      hx-swap="innerHTML"
-      hx-target="body"
-      hx-push-url="true">Back to home</a></p>
+    {back()}
   </>, { title: err.message })
+})
+
+app.post('/console-login', async (c) => {
+  const body = await c.req.formData()
+  const account = body.get('account')
+  const password = body.get('password')
+  if (account != c.env.ADMIN || password != c.env.PASSWD) {
+    return c.json({}, 401)
+  }
+  const exp = 81600
+  const token = await sign({ exp }, c.env.JWT_SECRET)
+  return c.json({}, 200, {
+    "HX-Location": JSON.stringify({ path: "/", target: "body", swap: "innerHTML" }),
+    "Set-Cookie": `${auth}=${token}; Max-Age=${exp}; Secure; HttpOnly; SameSite=strict; Path=/`,
+  })
+})
+
+app.get('/console-login', (c) => {
+  return c.render(<>
+    <header><h1>Console</h1></header>
+    <form hx-post="/console-login"
+      hx-swap="none"
+      hx-on--after-request={`
+        if (event.detail.xhr.status != 200) {
+          alert('Login failed!')
+        }
+      `}>
+      <table>
+        <tr>
+          <td><input type="text" name="account" required placeholder="account" /></td>
+        </tr>
+        <tr>
+          <td><input type="password" name="password" required placeholder="password" /></td>
+        </tr>
+        <tr>
+          <td style="text-align: center;">
+            <input type="submit" value="Submit" />
+          </td>
+        </tr>
+      </table>
+    </form >
+    <hr />
+    {back()}
+  </>, { title: "console-login" })
+})
+
+app.use('/console/*', (c, next) => {
+  const jwtMiddleware = jwt({
+    secret: c.env.JWT_SECRET,
+    cookie: auth,
+  })
+  return jwtMiddleware(c, next)
 })
 
 app.get('/post/:id', async (c) => {
@@ -55,17 +122,12 @@ app.get('/post/:id', async (c) => {
   const date = new Date(post.created_at)
   return c.render(<>
     <header>
-      <h1>{post.title}</h1>
-      <p>{`${date.getDate()} ${date.toLocaleString('en-US', { month: "short" })} ${date.getFullYear()}`}</p>
+      <h1 dangerouslySetInnerHTML={{ __html: post.title }} />
+      <p dangerouslySetInnerHTML={{ __html: `${date.getDate()} ${date.toLocaleString('en-US', { month: "short" })} ${date.getFullYear()}` }} />
     </header>
     <div dangerouslySetInnerHTML={{ __html: await marked.parse(post.content) }} />
     <hr />
-    <p><a class="button"
-      hx-trigger="click"
-      hx-get="/"
-      hx-swap="innerHTML"
-      hx-target="body"
-      hx-push-url="true">Back to home</a></p>
+    {back()}
   </>, { title: post.title })
 })
 
@@ -76,15 +138,18 @@ app.get('/', async (c) => {
   const posts = await getPosts(c.env.DATABASE, page, size)
   return c.render(<>
     <header>
-      <h1>{meta["blog_name"]}</h1>
+      <h1 dangerouslySetInnerHTML={{ __html: meta["blog_name"] }} />
     </header>
     <p>
       <img
-        style="float: right; width: 9em; margin-left: 1em; border-radius: 15px;"
+        hx-trigger="click"
+        hx-get="/console-login"
+        hx-target="body"
+        hx-push-url="true"
+        style="float: right; width: 9em; margin-left: 1em; border-radius: 15px; cursor: pointer"
         src={meta["blog_avatar"]}
-        alt={`Photo of ${meta["blog_name"]}`}>
-      </img>
-      <div dangerouslySetInnerHTML={{ __html: `${await marked.parse(meta["blog_desc"])}` }}></div>
+        alt={`Photo of ${meta["blog_name"]}`} />
+      <div dangerouslySetInnerHTML={{ __html: `${await marked.parse(meta["blog_desc"])}` }} />
     </p >
     <hr />
     <div class="posts">
@@ -95,7 +160,9 @@ app.get('/', async (c) => {
             hx-get={`/post/${id}`}
             hx-swap="innerHTML"
             hx-target="body"
-            hx-push-url="true">{title}</a></p >
+            hx-push-url="true"
+            dangerouslySetInnerHTML={{ __html: title }} />
+          </p >
           <div dangerouslySetInnerHTML={{ __html: `${await marked.parse(ellipsisText(content, 200))}` }} />
         </div>
       })}
@@ -106,7 +173,8 @@ app.get('/', async (c) => {
       hx-target=".posts"
       hx-swap="beforeend"
       hx-select=".post"
-      hx-select-oob="#page">Loading ...</div> ||
+      hx-select-oob="#page"
+      dangerouslySetInnerHTML={{ __html: "Loading..." }} /> ||
       <div id="page" />
     }
   </>
