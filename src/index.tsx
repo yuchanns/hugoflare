@@ -1,45 +1,12 @@
 import { Hono } from 'hono'
-import { renderer } from './components'
+import { back, renderer } from './components'
 import { getHomepageMetadata, getPost, getPosts } from './db'
 import { marked } from 'marked'
 import { HTTPException } from 'hono/http-exception'
 import { jwt, sign } from 'hono/jwt'
-
-type Bindings = {
-  DATABASE: D1Database
-  JWT_SECRET: string
-  ADMIN: string
-  PASSWD: string
-}
+import { Bindings, ellipsisText } from './utils'
 
 const auth = "token"
-
-const back = () => {
-  return <p><a class="button"
-    hx-trigger="click"
-    hx-get="/"
-    hx-swap="innerHTML"
-    hx-target="body"
-    hx-push-url="true"
-    dangerouslySetInnerHTML={{ __html: "Back to home" }}
-  /></p>
-}
-
-const ellipsisText = (text: string, maxLength: number) => {
-  if (text.length <= maxLength) {
-    return text;
-  }
-
-  let truncatedText = text.substring(0, maxLength);
-
-  let spaceIndex = truncatedText.lastIndexOf(' ');
-
-  if (spaceIndex !== -1) {
-    truncatedText = truncatedText.substring(0, spaceIndex);
-  }
-
-  return `${truncatedText.trim()}...`;
-}
 
 const app = new Hono<{ Bindings: Bindings }>()
 
