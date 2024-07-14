@@ -119,20 +119,20 @@ app.get('/console/save-post', (c) => {
     <form
       hx-post="/"
       hx-swap="none"
-      hx-on--config-request="
-      event.preventDefault()
-      const save = async () => {
-        const data = await editor.save()
-        await htmx.ajax('POST', '/console/save-post', {
-          swap: 'none',
-          values: {
-            blocks: data.blocks,
-            title: htmx.find('#title').value
-          }
-        })
-      }
-      Promise.all([save()])
-      "
+      hx-on--config-request={`
+        event.preventDefault()
+        const save = async () => {
+          const data = await editor.save()
+          await htmx.ajax('POST', '/console/save-post', {
+            swap: 'none',
+            values: {
+              blocks: data.blocks,
+              title: htmx.find('#title').value
+            }
+          })
+        }
+        Promise.all([save()])
+      `}
       hx-on--after-request={`
         if (event.detail.xhr.status != 200) {
           alert('Save failed!')

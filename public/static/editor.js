@@ -1,6 +1,6 @@
 var editor
 
-const loadScript = (url) => {
+var loadScript = (url) => {
   return new Promise((resolve, reject) => {
     const script = document.createElement('script')
     script.type = 'text/javascript'
@@ -11,7 +11,7 @@ const loadScript = (url) => {
   })
 }
 
-const loadEditorJS = async () => {
+var loadEditorJS = async () => {
   await Promise.all([
     loadScript('/static/editorjs/editorjs@2.30.2.umd.min.js'),
     loadScript('/static/editorjs/header@2.8.7.umd.min.js'),
@@ -24,6 +24,7 @@ const loadEditorJS = async () => {
   ])
 
   editor = new EditorJS({
+    autofocus: true,
     holder: 'editor',
     tools: {
       header: Header,
