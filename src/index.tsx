@@ -3,8 +3,9 @@ import { back, renderer } from './components'
 import { getHomepageMetadata, getPost, getPosts } from './db'
 import { marked } from 'marked'
 import { HTTPException } from 'hono/http-exception'
-import { jwt, sign } from 'hono/jwt'
+import { jwt, sign, verify } from 'hono/jwt'
 import { Bindings, ellipsisText } from './utils'
+import { getCookie } from 'hono/cookie'
 
 const auth = "token"
 
@@ -35,7 +36,7 @@ app.post('/console-login', async (c) => {
   if (account != c.env.ADMIN || password != c.env.PASSWD) {
     return c.json({}, 401)
   }
-  const exp = 81600
+  const exp = Math.floor(Date.now() / 1000) + 60 * 60 * 24
   const token = await sign({ exp }, c.env.JWT_SECRET)
   return c.json({}, 200, {
     "HX-Location": JSON.stringify({ path: "/", target: "body", swap: "innerHTML" }),
@@ -72,12 +73,12 @@ app.get('/console-login', (c) => {
   </>, { title: "console-login" })
 })
 
-app.use('/console/*', (c, next) => {
+app.use('/console/*', async (c, next) => {
   const jwtMiddleware = jwt({
     secret: c.env.JWT_SECRET,
     cookie: auth,
   })
-  return jwtMiddleware(c, next)
+  return await jwtMiddleware(c, next)
 })
 
 app.get('/post/:id', async (c) => {
@@ -99,6 +100,10 @@ app.get('/post/:id', async (c) => {
 })
 
 app.get('/', async (c) => {
+  const token = getCookie(c, "token") ?? ''
+  const entryPath = await verify(token, c.env.JWT_SECRET).
+    then(() => '/console/new-post').catch(() => '/console-login')
+
   const page = parseInt(c.req.query("page") ?? "1")
   const meta = await getHomepageMetadata(c.env.DATABASE)
   const size = 5
@@ -110,7 +115,7 @@ app.get('/', async (c) => {
     <p>
       <img
         hx-trigger="click"
-        hx-get="/console-login"
+        hx-get={entryPath}
         hx-target="body"
         hx-push-url="true"
         style="float: right; width: 9em; margin-left: 1em; border-radius: 15px; cursor: pointer"
