@@ -7,7 +7,7 @@ var loadScript = (url) => {
     script.src = url
     script.onload = () => resolve(script)
     script.onerror = () => reject(new Error(`Script load error for ${url}`))
-    document.head.appendChild(script)
+    htmx.find('#script').appendChild(script)
   })
 }
 
@@ -40,6 +40,21 @@ var loadEditorJS = async () => {
       },
       code: CodeTool,
       inlineCode: InlineCode,
+    },
+    onChange: async (api, _) => {
+      const index = api.blocks.getCurrentBlockIndex()
+      const block = api.blocks.getBlockByIndex(index)
+      if (block.name == "paragraph") {
+        const { data: { text } } = await block.save()
+        const headerMatch = text.match(/^(#{1,6})\s+(.+)/)
+        if (headerMatch) {
+          const { id } = await api.blocks.convert(block.id, 'header')
+          await api.blocks.update(id, {
+            text: text.substring(headerMatch[1].length),
+            level: headerMatch[1].length,
+          })
+        }
+      }
     }
   })
 }
