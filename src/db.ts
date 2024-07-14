@@ -2,6 +2,18 @@ import { desc, eq, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import { sqliteTable, text } from "drizzle-orm/sqlite-core";
 
+export interface Text {
+  text: string
+}
+
+export interface Code {
+  code: string
+}
+
+export interface Paragraph {
+  text: string
+}
+
 export interface Header {
   text: string
   level: number
@@ -40,8 +52,8 @@ export interface Image {
 
 export interface Block {
   id: string
-  type: "header" | "checklist" | "list" | "quote" | "image"
-  data: Header | CheckList | NestedList | Quote | Image
+  type: "header" | "checklist" | "list" | "quote" | "image" | "paragraph" | "code" | "text"
+  data: Header | CheckList | NestedList | Quote | Image | Paragraph | Code | Text
 }
 
 const tblPost = sqliteTable("Post", {
@@ -85,7 +97,7 @@ export const getPost = async (DB: D1Database, id: string) => {
 
 const buildList = (item: Item, indent: number): string => {
   const contents = []
-  contents.push("\t".repeat(indent) + "* " + item.content)
+  contents.push("\t".repeat(indent) + "* " + item.content + "\n")
   for (item of item.items) {
     contents.push(buildList(item, indent + 1))
   }
@@ -96,16 +108,22 @@ const buildContent = (blocks: Block[]) => {
   const contents = []
   for (const block of blocks) {
     switch (block.type) {
+      case "paragraph":
+        {
+          const data = block.data as Paragraph
+          contents.push(data.text + "\r\n")
+        }
+        break
       case "header":
         {
           const data = block.data as Header
-          contents.push("# ".repeat(data.level) + data.text)
+          contents.push("#".repeat(data.level) + " " + data.text + "\r\n")
         }
         break
       case "quote":
         {
           const data = block.data as Quote
-          contents.push("> " + data.text)
+          contents.push("> " + data.text + "\r\n")
         }
         break
       case "list":
@@ -122,9 +140,9 @@ const buildContent = (blocks: Block[]) => {
           const data = block.data as CheckList
           for (const item of data.items) {
             if (!item.checked) {
-              contents.push("- [ ] " + item.text)
+              contents.push("- [ ] " + item.text + "\n")
             } else {
-              contents.push("- [x] " + item.text)
+              contents.push("- [x] " + item.text + "\n")
             }
           }
         }
@@ -132,7 +150,19 @@ const buildContent = (blocks: Block[]) => {
       case "image":
         {
           const data = block.data as Image
-          contents.push(`[${data.caption}](${data.file.url})`)
+          contents.push(`[${data.caption}](${data.file.url})\r\n`)
+        }
+        break
+      case "code":
+        {
+          const data = block.data as Code
+          contents.push(`\`\`\`\n${data.code}\n\`\`\`\r\n`)
+        }
+        break
+      case "text":
+        {
+          const data = block.data as Text
+          contents.push(`\`${data.text}\``)
         }
         break
     }

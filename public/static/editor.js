@@ -19,6 +19,8 @@ const loadEditorJS = async () => {
     loadScript('/static/editorjs/nested-list@1.4.2.umd.min.js'),
     loadScript('/static/editorjs/quote@2.6.0.umd.min.js'),
     loadScript('/static/editorjs/image@2.9.1.umd.min.js'),
+    loadScript('/static/editorjs/code@2.9.0.umd.min.js'),
+    loadScript('/static/editorjs/inline-code@1.5.0.umd.min.js'),
   ])
 
   editor = new EditorJS({
@@ -34,7 +36,9 @@ const loadEditorJS = async () => {
           byFile: '/console/upload-image',
           byUrl: '/console/fetch-image'
         }
-      }
+      },
+      code: CodeTool,
+      inlineCode: InlineCode,
     }
   })
 }

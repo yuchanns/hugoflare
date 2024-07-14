@@ -9,6 +9,24 @@ import { getCookie } from 'hono/cookie'
 
 const auth = "token"
 
+const mdrender = new marked.Renderer()
+
+mdrender.blockquote = ({ tokens }) => {
+  const contents = []
+  for (const token of tokens) {
+    if (token.type == "paragraph") {
+      contents.push(`<p><em>${token.raw}</em></p>`)
+    } else {
+      contents.push(marked.parseInline(token.raw))
+    }
+  }
+  return `<blockquote>${contents.join()}</blockquote>`
+}
+
+mdrender.code = ({ text, lang }) => {
+  return `<div class="code ${lang}"><pre><code>${text}</code></pre></div>`
+}
+
 const app = new Hono<{ Bindings: Bindings }>()
 
 app.use(renderer)
@@ -23,7 +41,7 @@ app.onError((err, c) => {
   }
   return c.render(<>
     <header>
-      <h1 dangerouslySetInnerHTML={{ __html: (err instanceof HTTPException) ? `${err.status} ${err.message}` : `500 ${err.message}` }} />
+      <h1 dangerouslySetInnerHTML={{ __html: (err instanceof HTTPException) ? `${err.status} ${err.message} ` : `500 ${err.message} ` }} />
     </header>
     {back()}
   </>, { title: err.message })
@@ -40,7 +58,7 @@ app.post('/console-login', async (c) => {
   const token = await sign({ exp }, c.env.JWT_SECRET)
   return c.json({}, 200, {
     "HX-Location": JSON.stringify({ path: "/", target: "body", swap: "innerHTML" }),
-    "Set-Cookie": `${auth}=${token}; Max-Age=${exp}; Secure; HttpOnly; SameSite=strict; Path=/`,
+    "Set-Cookie": `${auth}=${token}; Max - Age=${exp}; Secure; HttpOnly; SameSite = strict; Path = /`,
   })
 })
 
@@ -125,11 +143,13 @@ app.get('/console/save-post', (c) => {
       </header>
       <div id="editor" />
       <div style="text-align: center">
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Save" />
       </div>
     </form>
     <div id="script" />
     <script src="/static/editor.js" />
+    <hr />
+    {back()}
   </>)
 })
 
@@ -145,7 +165,7 @@ app.get('/post/:id', async (c) => {
       <h1 dangerouslySetInnerHTML={{ __html: post.title }} />
       <p dangerouslySetInnerHTML={{ __html: `${date.getDate()} ${date.toLocaleString('en-US', { month: "short" })} ${date.getFullYear()}` }} />
     </header>
-    <div dangerouslySetInnerHTML={{ __html: await marked.parse(post.content) }} />
+    <div dangerouslySetInnerHTML={{ __html: await marked.parse(post.content, { renderer: mdrender }) }} />
     <hr />
     {back()}
   </>, { title: post.title })
@@ -173,7 +193,7 @@ app.get('/', async (c) => {
         style="float: right; width: 9em; margin-left: 1em; border-radius: 15px; cursor: pointer"
         src={meta["blog_avatar"]}
         alt={`Photo of ${meta["blog_name"]}`} />
-      <div dangerouslySetInnerHTML={{ __html: `${await marked.parse(meta["blog_desc"])}` }} />
+      <div dangerouslySetInnerHTML={{ __html: `${await marked.parse(meta["blog_desc"], { renderer: mdrender })}` }} />
     </p >
     <hr />
     <div class="posts">
@@ -187,7 +207,7 @@ app.get('/', async (c) => {
             hx-push-url="true"
             dangerouslySetInnerHTML={{ __html: title }} />
           </p >
-          <div dangerouslySetInnerHTML={{ __html: `${await marked.parse(ellipsisText(content, 200))}` }} />
+          <div dangerouslySetInnerHTML={{ __html: `${await marked.parse(ellipsisText(content, 200), { renderer: mdrender })}` }} />
         </div>
       })}
     </div>
