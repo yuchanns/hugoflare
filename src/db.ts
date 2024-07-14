@@ -95,6 +95,11 @@ export const getPost = async (DB: D1Database, id: string) => {
     where(eq(tblPost.id, id)).get()
 }
 
+export const deletePost = async (DB: D1Database, id: string) => {
+  const db = drizzle(DB)
+  await db.delete(tblPost).where(eq(tblPost.id, id))
+}
+
 const buildList = (item: Item, indent: number): string => {
   const contents = []
   contents.push("\t".repeat(indent) + "* " + item.content + "\n")

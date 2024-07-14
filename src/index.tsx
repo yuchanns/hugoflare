@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { back, renderer } from './components'
-import { Block, getHomepageMetadata, getPost, getPosts, savePost } from './db'
+import { Block, deletePost, getHomepageMetadata, getPost, getPosts, savePost } from './db'
 import { marked } from 'marked'
 import { HTTPException } from 'hono/http-exception'
 import { jwt, sign, verify } from 'hono/jwt'
@@ -153,6 +153,14 @@ app.get('/console/save-post', (c) => {
   </>)
 })
 
+app.delete('/post/:id', async (c) => {
+  const id = c.req.param('id')
+  await deletePost(c.env.DATABASE, id)
+  return c.json({}, 200, {
+    "HX-Location": JSON.stringify({ path: `/`, target: "body", swap: "innerHTML" })
+  })
+})
+
 app.get('/post/:id', async (c) => {
   const id = c.req.param('id')
   const post = await getPost(c.env.DATABASE, id)
@@ -173,8 +181,9 @@ app.get('/post/:id', async (c) => {
 
 app.get('/', async (c) => {
   const token = getCookie(c, "token") ?? ''
-  const entryPath = await verify(token, c.env.JWT_SECRET).
-    then(() => '/console/save-post').catch(() => '/console-login')
+  const isLogin = await verify(token, c.env.JWT_SECRET).
+    then(() => true).catch(() => false)
+  const entryPath = isLogin ? "/console/save-post" : "/console-login"
 
   const page = parseInt(c.req.query("page") ?? "1")
   const meta = await getHomepageMetadata(c.env.DATABASE)
@@ -206,6 +215,11 @@ app.get('/', async (c) => {
             hx-target="body"
             hx-push-url="true"
             dangerouslySetInnerHTML={{ __html: title }} />
+            {isLogin && <a class="delete"
+              hx-trigger="click"
+              hx-delete={`/post/${id}`}
+              hx-swap="none"
+              hx-confirm="Are you sure?"> - delete</a>}
           </p >
           <div dangerouslySetInnerHTML={{ __html: `${await marked.parse(ellipsisText(content, 200), { renderer: mdrender })}` }} />
         </div>

@@ -16,6 +16,12 @@ header {
     text-align: center;
 }
 
+a.delete {
+    cursor: pointer;
+    font-style: italic;
+    font-size: 80%;
+}
+
 a.title {
     text-decoration: underline;
     font-weight: bold;
