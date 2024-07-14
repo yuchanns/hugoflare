@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { back, renderer } from './components'
-import { getHomepageMetadata, getPost, getPosts } from './db'
+import { Block, getHomepageMetadata, getPost, getPosts, savePost } from './db'
 import { marked } from 'marked'
 import { HTTPException } from 'hono/http-exception'
 import { jwt, sign, verify } from 'hono/jwt'
@@ -81,6 +81,58 @@ app.use('/console/*', async (c, next) => {
   return await jwtMiddleware(c, next)
 })
 
+app.post('/console/save-post', async (c) => {
+  const body = await c.req.formData()
+  const title = body.get("title") ?? ''
+  const formBlocks = body.getAll("blocks")
+  const blocks: Block[] = []
+  for (const formBlock of formBlocks) {
+    const block = JSON.parse(formBlock) as Block
+    blocks.push(block)
+  }
+  const id = await savePost(c.env.DATABASE, { title, blocks: blocks })
+  return c.json({}, 200, {
+    "HX-Location": JSON.stringify({ path: `/post/${id}`, target: "body", swap: "innerHTML" }),
+  })
+})
+
+app.get('/console/save-post', (c) => {
+  return c.render(<>
+    <form
+      hx-post="/"
+      hx-swap="none"
+      hx-on--config-request="
+      event.preventDefault()
+      const save = async () => {
+        const data = await editor.save()
+        await htmx.ajax('POST', '/console/save-post', {
+          swap: 'none',
+          values: {
+            blocks: data.blocks,
+            title: htmx.find('#title').value
+          }
+        })
+      }
+      Promise.all([save()])
+      "
+      hx-on--after-request={`
+        if (event.detail.xhr.status != 200) {
+          alert('Save failed!')
+        }
+      `}>
+      <header>
+        <h1><input id="title" type="text" name="title" required placeholder="Title" /></h1>
+      </header>
+      <div id="editor" />
+      <div style="text-align: center">
+        <input type="submit" value="Submit" />
+      </div>
+    </form>
+    <div id="script" />
+    <script src="/static/editor.js" />
+  </>)
+})
+
 app.get('/post/:id', async (c) => {
   const id = c.req.param('id')
   const post = await getPost(c.env.DATABASE, id)
@@ -102,7 +154,7 @@ app.get('/post/:id', async (c) => {
 app.get('/', async (c) => {
   const token = getCookie(c, "token") ?? ''
   const entryPath = await verify(token, c.env.JWT_SECRET).
-    then(() => '/console/new-post').catch(() => '/console-login')
+    then(() => '/console/save-post').catch(() => '/console-login')
 
   const page = parseInt(c.req.query("page") ?? "1")
   const meta = await getHomepageMetadata(c.env.DATABASE)

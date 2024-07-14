@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS Post (
     title TEXT NOT NULL,
     tags TEXT NOT NULL,
     content TEXT NOT NULL,
+    blocks TEXT NOT NULL,
     created_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL,
     deleted_at DATETIME
