@@ -123,6 +123,7 @@ app.post('/console/post/:id?', async (c) => {
 app.get('/console/post/:id?', async (c) => {
   const id = c.req.param("id")
   const post = id ? await getPost(c.env.DATABASE, id) : ""
+  const saveUrl = id ? `/console/post/${id}` : "/console/post"
   return c.render(<>
     <form
       hx-post="/"
@@ -131,7 +132,7 @@ app.get('/console/post/:id?', async (c) => {
         event.preventDefault()
         const save = async () => {
           const data = await editor.save()
-          await htmx.ajax('POST', '/console/post/${id ?? ""}', {
+          await htmx.ajax('POST', '${saveUrl}', {
             swap: 'none',
             values: {
               blocks: data.blocks,
