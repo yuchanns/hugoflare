@@ -108,7 +108,8 @@ app.post('/console/upload-image', async (c) => {
   const { image, name, type } = await c.req.json()
   const encoded = image.replace(/^data:image\/\w+;base64,/, '')
   const arrayBuffer = Uint8Array.from(atob(encoded), c => c.charCodeAt(0))
-  const fileName = `images/${name}`
+  const names = name.split(".")
+  const fileName = `images/${names[0]}_${crypto.randomUUID()}.${names[1]}`
   const obj = await c.env.BUCKET.put(fileName, arrayBuffer, {
     httpMetadata: {
       contentType: type,
