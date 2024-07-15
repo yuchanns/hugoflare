@@ -39,8 +39,10 @@ var loadEditorJS = async () => {
       image: {
         class: ImageTool,
         config: {
-          byFile: '/console/upload-image',
-          byUrl: '/console/fetch-image'
+          endpoints: {
+            byFile: '/console/upload-image',
+            byUrl: '/console/fetch-image'
+          }
         }
       },
       code: CodeTool,

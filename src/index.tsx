@@ -104,6 +104,22 @@ app.use('/console/*', async (c, next) => {
   return await jwtMiddleware(c, next)
 })
 
+app.post('/console/upload-image', async (c) => {
+  const body = await c.req.parseBody()
+  const file = body["files"] as File
+  const key = `/images/${file.name}_${crypto.randomUUID()}`
+  const obj = await c.env.BUCKET.put(key, file)
+  if (!obj) {
+    throw new HTTPException(404)
+  }
+  return c.json({
+    success: 1,
+    file: {
+      url: `${c.env.R2DOMAIN}/${obj.key}`
+    }
+  }, 200)
+})
+
 app.post('/console/post/:id?', async (c) => {
   let id = c.req.param("id")
   const body = await c.req.formData()

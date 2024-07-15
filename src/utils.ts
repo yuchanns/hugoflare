@@ -16,9 +16,11 @@ export const ellipsisText = (text: string, maxLength: number) => {
 
 export type Bindings = {
   DATABASE: D1Database
+  BUCKET: R2Bucket
   JWT_SECRET: string
   ADMIN: string
   PASSWD: string
+  R2DOMAIN: string
 
   isLogin: boolean
 }

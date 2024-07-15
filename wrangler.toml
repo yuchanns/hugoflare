@@ -5,3 +5,7 @@ pages_build_output_dir = "./dist"
 binding = "DATABASE"
 database_name = "block-db"
 database_id = "82f8691f-954f-43b2-a687-ea9a9bcf0fe2"
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "blockflare"
