@@ -1,3 +1,5 @@
+/** @typedef {import("./editorjs/editorjs@2.30.2.umd.min.js")} EditorJS **/
+
 var editor
 
 var loadScript = (url) => {
@@ -23,6 +25,9 @@ var loadEditorJS = async () => {
     loadScript('/static/editorjs/inline-code@1.5.0.umd.min.js'),
   ])
 
+  const data = htmx.find("#data").getAttribute("data-vals")
+  const blocks = data.length > 0 ? JSON.parse(JSON.parse(`"${data}"`)) : []
+  /** @type {EditorJS} **/
   editor = new EditorJS({
     autofocus: true,
     holder: 'editor',
@@ -40,6 +45,9 @@ var loadEditorJS = async () => {
       },
       code: CodeTool,
       inlineCode: InlineCode,
+    },
+    data: {
+      blocks,
     },
     onChange: async (api, _) => {
       const index = api.blocks.getCurrentBlockIndex()

@@ -19,6 +19,8 @@ export type Bindings = {
   JWT_SECRET: string
   ADMIN: string
   PASSWD: string
+
+  isLogin: boolean
 }
 
 

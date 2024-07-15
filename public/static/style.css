@@ -16,7 +16,7 @@ header {
     text-align: center;
 }
 
-a.delete {
+a.action {
     cursor: pointer;
     font-style: italic;
     font-size: 80%;

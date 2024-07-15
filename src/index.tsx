@@ -29,7 +29,12 @@ mdrender.code = ({ text, lang }) => {
 
 const app = new Hono<{ Bindings: Bindings }>()
 
-app.use(renderer)
+app.use(async (c, next) => {
+  const token = getCookie(c, "token") ?? ''
+  c.env.isLogin = await verify(token, c.env.JWT_SECRET).
+    then(() => true).catch(() => false)
+  await next()
+}).use(renderer)
 
 app.notFound((_c) => {
   throw new HTTPException(404, { message: "NotFound" })
@@ -99,7 +104,8 @@ app.use('/console/*', async (c, next) => {
   return await jwtMiddleware(c, next)
 })
 
-app.post('/console/save-post', async (c) => {
+app.post('/console/post/:id?', async (c) => {
+  let id = c.req.param("id")
   const body = await c.req.formData()
   const title = body.get("title") ?? ''
   const formBlocks = body.getAll("blocks")
@@ -108,13 +114,15 @@ app.post('/console/save-post', async (c) => {
     const block = JSON.parse(formBlock) as Block
     blocks.push(block)
   }
-  const id = await savePost(c.env.DATABASE, { title, blocks: blocks })
+  id = await savePost(c.env.DATABASE, { title, blocks: blocks }, id)
   return c.json({}, 200, {
     "HX-Location": JSON.stringify({ path: `/post/${id}`, target: "body", swap: "innerHTML" }),
   })
 })
 
-app.get('/console/save-post', (c) => {
+app.get('/console/post/:id?', async (c) => {
+  const id = c.req.param("id")
+  const post = id ? await getPost(c.env.DATABASE, id) : ""
   return c.render(<>
     <form
       hx-post="/"
@@ -123,7 +131,7 @@ app.get('/console/save-post', (c) => {
         event.preventDefault()
         const save = async () => {
           const data = await editor.save()
-          await htmx.ajax('POST', '/console/save-post', {
+          await htmx.ajax('POST', '/console/post/${id ?? ""}', {
             swap: 'none',
             values: {
               blocks: data.blocks,
@@ -139,21 +147,23 @@ app.get('/console/save-post', (c) => {
         }
       `}>
       <header>
-        <h1><input id="title" type="text" name="title" required placeholder="Title" /></h1>
+        <h1><input id="title" type="text" name="title" required placeholder="Title" value={post ? post.title : ""} /></h1>
       </header>
       <div id="editor" />
       <div style="text-align: center">
         <input type="submit" value="Save" />
       </div>
     </form>
-    <div id="script" />
+    <div id="script">
+      <div id="data" data-vals={post ? JSON.stringify(post.blocks).replace(/"/g, '\\"') : ""} />
+    </div>
     <script src="/static/editor.js" />
     <hr />
     {back()}
   </>)
 })
 
-app.delete('/post/:id', async (c) => {
+app.delete('/console/post/:id', async (c) => {
   const id = c.req.param('id')
   await deletePost(c.env.DATABASE, id)
   return c.json({}, 200, {
@@ -167,6 +177,7 @@ app.get('/post/:id', async (c) => {
   if (!post) {
     return c.notFound()
   }
+  const isLogin = c.env.isLogin
   const date = new Date(post.created_at)
   return c.render(<>
     <header>
@@ -174,16 +185,29 @@ app.get('/post/:id', async (c) => {
       <p dangerouslySetInnerHTML={{ __html: `${date.getDate()} ${date.toLocaleString('en-US', { month: "short" })} ${date.getFullYear()}` }} />
     </header>
     <div dangerouslySetInnerHTML={{ __html: await marked.parse(post.content, { renderer: mdrender }) }} />
+    <div vals={`${JSON.stringify(post.blocks).replace(/"/g, '\\"')}`} />
     <hr />
+    {isLogin && <>
+      <a class="action"
+        hx-trigger="click"
+        hx-swap="innerHTML"
+        hx-target="body"
+        hx-push-url="true"
+        hx-get={`/console/post/${id}`}>edit</a>
+      <a class="action"
+        hx-trigger="click"
+        hx-delete={`/console/post/${id}`}
+        hx-swap="none"
+        hx-push-url="true"
+        hx-confirm="Are you sure?"> - delete</a>
+    </>}
     {back()}
   </>, { title: post.title })
 })
 
 app.get('/', async (c) => {
-  const token = getCookie(c, "token") ?? ''
-  const isLogin = await verify(token, c.env.JWT_SECRET).
-    then(() => true).catch(() => false)
-  const entryPath = isLogin ? "/console/save-post" : "/console-login"
+  const isLogin = c.env.isLogin
+  const entryPath = isLogin ? "/console/post" : "/console-login"
 
   const page = parseInt(c.req.query("page") ?? "1")
   const meta = await getHomepageMetadata(c.env.DATABASE)
@@ -215,11 +239,20 @@ app.get('/', async (c) => {
             hx-target="body"
             hx-push-url="true"
             dangerouslySetInnerHTML={{ __html: title }} />
-            {isLogin && <a class="delete"
-              hx-trigger="click"
-              hx-delete={`/post/${id}`}
-              hx-swap="none"
-              hx-confirm="Are you sure?"> - delete</a>}
+            {isLogin && <>
+              <a class="action"
+                hx-trigger="click"
+                hx-swap="innerHTML"
+                hx-target="body"
+                hx-push-url="true"
+                hx-get={`/console/post/${id}`}> - edit</a>
+              <a class="action"
+                hx-trigger="click"
+                hx-delete={`/console/post/${id}`}
+                hx-swap="none"
+                hx-push-url="true"
+                hx-confirm="Are you sure?"> - delete</a>
+            </>}
           </p >
           <div dangerouslySetInnerHTML={{ __html: `${await marked.parse(ellipsisText(content, 200), { renderer: mdrender })}` }} />
         </div>
