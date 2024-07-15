@@ -4,7 +4,7 @@ import { Block, deletePost, getHomepageMetadata, getPost, getPosts, savePost } f
 import { marked } from 'marked'
 import { HTTPException } from 'hono/http-exception'
 import { jwt, sign, verify } from 'hono/jwt'
-import { Bindings, ellipsisText } from './utils'
+import { Bindings, blocksToText, ellipsisText } from './utils'
 import { getCookie } from 'hono/cookie'
 
 const auth = "token"
@@ -253,7 +253,7 @@ app.get('/', async (c) => {
     </p >
     <hr />
     <div class="posts">
-      {posts.map(async ({ id, title, content }) => {
+      {posts.map(async ({ id, title, blocks }) => {
         return <div class="post">
           <p><a class="title"
             hx-trigger="click"
@@ -277,7 +277,7 @@ app.get('/', async (c) => {
                 hx-confirm="Are you sure?"> - delete</a>
             </>}
           </p >
-          <div dangerouslySetInnerHTML={{ __html: `${await marked.parse(ellipsisText(content, 200), { renderer: mdrender })}` }} />
+          <div dangerouslySetInnerHTML={{ __html: `${await marked.parse(ellipsisText(blocksToText(blocks), 200), { renderer: mdrender })}` }} />
         </div>
       })}
     </div>

@@ -1,3 +1,5 @@
+import { Block, Paragraph } from "./db";
+
 export const ellipsisText = (text: string, maxLength: number) => {
   if (text.length <= maxLength) {
     return text;
@@ -12,6 +14,11 @@ export const ellipsisText = (text: string, maxLength: number) => {
   }
 
   return `${truncatedText.trim()}...`;
+}
+
+export const blocksToText = (blocks: Block[]) => {
+  return blocks.filter(({ type }) => type == "paragraph").
+    map(({ data }) => (data as Paragraph).text).join("\r\n\r\n")
 }
 
 export type Bindings = {
