@@ -26,7 +26,7 @@ var loadEditorJS = async () => {
   ])
 
   const data = htmx.find("#data").getAttribute("data-vals")
-  const blocks = data.length > 0 ? JSON.parse(JSON.parse(`"${data}"`)) : []
+  const blocks = data.length > 0 ? JSON.parse(decodeURIComponent(atob(data))) : []
   /** @type {EditorJS} **/
   editor = new EditorJS({
     autofocus: true,

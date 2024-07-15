@@ -124,6 +124,7 @@ app.get('/console/post/:id?', async (c) => {
   const id = c.req.param("id")
   const post = id ? await getPost(c.env.DATABASE, id) : ""
   const saveUrl = id ? `/console/post/${id}` : "/console/post"
+  const blocks64 = post ? btoa(encodeURIComponent(JSON.stringify(post.blocks))) : ""
   return c.render(<>
     <form
       hx-post="/"
@@ -156,7 +157,7 @@ app.get('/console/post/:id?', async (c) => {
       </div>
     </form>
     <div id="script">
-      <div id="data" data-vals={post ? JSON.stringify(post.blocks).replace(/"/g, '\\"') : ""} />
+      <div id="data" data-vals={blocks64} />
     </div>
     <script src="/static/editor.js" />
     <hr />
@@ -186,7 +187,6 @@ app.get('/post/:id', async (c) => {
       <p dangerouslySetInnerHTML={{ __html: `${date.getDate()} ${date.toLocaleString('en-US', { month: "short" })} ${date.getFullYear()}` }} />
     </header>
     <div dangerouslySetInnerHTML={{ __html: await marked.parse(post.content, { renderer: mdrender }) }} />
-    <div vals={`${JSON.stringify(post.blocks).replace(/"/g, '\\"')}`} />
     <hr />
     {isLogin && <>
       <a class="action"
