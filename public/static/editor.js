@@ -39,9 +39,31 @@ var loadEditorJS = async () => {
       image: {
         class: ImageTool,
         config: {
-          endpoints: {
-            byFile: '/console/upload-image',
-            byUrl: '/console/fetch-image'
+          uploader: {
+            /**@param {File} file **/
+            uploadByFile: async (file) => {
+              const encoded = await new Promise((resolve, reject) => {
+                const reader = new FileReader()
+                reader.readAsDataURL(file)
+                reader.onload = () => resolve(reader.result)
+                reader.onerror = error => reject(error)
+              })
+              const result = await fetch("/console/upload-image", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  image: encoded,
+                  name: file.name,
+                  type: file.type
+                })
+              })
+              if (!result.ok) {
+                throw new Exception(result.statusText)
+              }
+              return await result.json()
+            }
           }
         }
       },

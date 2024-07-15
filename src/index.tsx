@@ -105,10 +105,15 @@ app.use('/console/*', async (c, next) => {
 })
 
 app.post('/console/upload-image', async (c) => {
-  const body = await c.req.parseBody()
-  const file = body["files"] as File
-  const key = `/images/${file.name}_${crypto.randomUUID()}`
-  const obj = await c.env.BUCKET.put(key, file)
+  const { image, name, type } = await c.req.json()
+  const encoded = image.replace(/^data:image\/\w+;base64,/, '')
+  const arrayBuffer = Uint8Array.from(atob(encoded), c => c.charCodeAt(0))
+  const fileName = `images/${name}`
+  const obj = await c.env.BUCKET.put(fileName, arrayBuffer, {
+    httpMetadata: {
+      contentType: type,
+    }
+  })
   if (!obj) {
     throw new HTTPException(404)
   }
