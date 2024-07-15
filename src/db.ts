@@ -155,7 +155,7 @@ const buildContent = (blocks: Block[]) => {
       case "image":
         {
           const data = block.data as Image
-          contents.push(`[${data.caption}](${data.file.url})\r\n`)
+          contents.push(`![${data.caption}](${data.file.url})\r\n`)
         }
         break
       case "code":
