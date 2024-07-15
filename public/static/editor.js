@@ -54,13 +54,24 @@ var loadEditorJS = async () => {
       const block = api.blocks.getBlockByIndex(index)
       if (block.name == "paragraph") {
         const { data: { text } } = await block.save()
-        const headerMatch = text.match(/^(#{1,6})\s+(.+)/)
+
+        const headerMatch = text.match(/^(#{1,6})\s+(?!<br>)(.+)/)
         if (headerMatch) {
           const { id } = await api.blocks.convert(block.id, 'header')
           await api.blocks.update(id, {
             text: text.substring(headerMatch[1].length),
             level: headerMatch[1].length,
           })
+          return
+        }
+
+        const quoteMatch = text.match(/^&gt;\s+(?!<br>)(.+)/)
+        if (quoteMatch) {
+          const { id } = await api.blocks.convert(block.id, 'quote')
+          await api.blocks.update(id, {
+            text: quoteMatch[1].trim()
+          })
+          return
         }
       }
     }
