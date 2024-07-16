@@ -84,7 +84,7 @@ ul > li::marker {
 
 pre {
     margin: 0;
-    overflow: visible;
+    overflow: scroll;
 }
 
 pre > code {
