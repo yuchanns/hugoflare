@@ -98,13 +98,26 @@ var loadEditorJS = async () => {
           return
         }
 
-        const listMatch = text.match(/^[*-]\s+(?!<br>)(.+)/)
-        if (listMatch) {
+        const uolistMatch = text.match(/^[*-]\s+(?!<br>)(.+)/)
+        if (uolistMatch) {
           const { id } = await api.blocks.convert(block.id, 'list')
           await api.blocks.update(id, {
             style: 'unordered',
             items: [
-              { content: listMatch[1].trim() }
+              { content: uolistMatch[1].trim() }
+            ]
+          })
+          return
+        }
+
+        const olistMatch = text.match(/^(\d+)\.\s+(?!<br>)(.+)/)
+        console.log(olistMatch)
+        if (olistMatch) {
+          const { id } = await api.blocks.convert(block.id, 'list')
+          await api.blocks.update(id, {
+            style: 'ordered',
+            items: [
+              { content: olistMatch[2].trim() }
             ]
           })
           return

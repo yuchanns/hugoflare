@@ -100,11 +100,19 @@ export const deletePost = async (DB: D1Database, id: string) => {
   await db.delete(tblPost).where(eq(tblPost.id, id))
 }
 
-const buildList = (item: Item, indent: number): string => {
+const buildList = (item: Item, indent: number, index: number): string => {
   const contents = []
-  contents.push("\t".repeat(indent) + "* " + item.content + "\n")
-  for (item of item.items) {
-    contents.push(buildList(item, indent + 1))
+  if (index > 0) {
+    contents.push("\t".repeat(indent) + `${index}. ` + item.content + "\n")
+  } else {
+    contents.push("\t".repeat(indent) + "* " + item.content + "\n")
+
+  }
+  for (let [idx, it] of item.items.entries()) {
+    if (index == 0) {
+      idx = 0
+    }
+    contents.push(buildList(it, indent + 1, idx + 1))
   }
   return contents.join("\r\t")
 }
@@ -134,9 +142,11 @@ const buildContent = (blocks: Block[]) => {
       case "list":
         {
           const data = block.data as NestedList
-          for (const item of data.items) {
-            // FIXME: respect the style
-            contents.push(buildList(item, 0))
+          for (let [index, item] of data.items.entries()) {
+            if (data.style == "unordered") {
+              index = 0
+            }
+            contents.push(buildList(item, 0, index + 1))
           }
         }
         break
