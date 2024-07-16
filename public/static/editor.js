@@ -97,6 +97,18 @@ var loadEditorJS = async () => {
           })
           return
         }
+
+        const listMatch = text.match(/^\*\s+(?!<br>)(.+)/)
+        if (listMatch) {
+          const { id } = await api.blocks.convert(block.id, 'list')
+          await api.blocks.update(id, {
+            style: 'unordered',
+            items: [
+              { content: listMatch[1].trim() }
+            ]
+          })
+          return
+        }
       }
     }
   })
