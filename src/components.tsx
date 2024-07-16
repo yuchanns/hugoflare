@@ -22,7 +22,7 @@ export const back = () => {
   return <p><a class="button"
     hx-trigger="click"
     hx-get="/"
-    hx-swap="innerHTML"
+    hx-swap="innerHTML show:window:top"
     hx-target="body"
     hx-push-url="true"
     dangerouslySetInnerHTML={{ __html: "Back to home" }}

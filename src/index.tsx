@@ -213,7 +213,7 @@ app.get('/post/:id', async (c) => {
     {isLogin && <>
       <a class="action"
         hx-trigger="click"
-        hx-swap="innerHTML"
+        hx-swap="innerHTML show:window:top"
         hx-target="body"
         hx-push-url="true"
         hx-get={`/console/post/${id}`}>edit</a>
@@ -258,14 +258,14 @@ app.get('/', async (c) => {
           <p><a class="title"
             hx-trigger="click"
             hx-get={`/post/${id}`}
-            hx-swap="innerHTML"
+            hx-swap="innerHTML show:window:top"
             hx-target="body"
             hx-push-url="true"
             dangerouslySetInnerHTML={{ __html: title }} />
             {isLogin && <>
               <a class="action"
                 hx-trigger="click"
-                hx-swap="innerHTML"
+                hx-swap="innerHTML show:window:top"
                 hx-target="body"
                 hx-push-url="true"
                 hx-get={`/console/post/${id}`}> - edit</a>
