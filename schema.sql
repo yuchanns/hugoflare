@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS Post (
     tags TEXT NOT NULL,
     content TEXT NOT NULL,
     blocks TEXT NOT NULL,
+    is_draft INTEGER NOT NULL,
     created_at DATETIME NOT NULL,
     updated_at DATETIME NOT NULL,
     deleted_at DATETIME

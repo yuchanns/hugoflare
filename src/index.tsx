@@ -144,7 +144,7 @@ app.post('/console/post/:id?', async (c) => {
 
 app.get('/console/post/:id?', async (c) => {
   const id = c.req.param("id")
-  const post = id ? await getPost(c.env.DATABASE, id) : ""
+  const post = id ? await getPost(c.env.DATABASE, id, true) : ""
   const saveUrl = id ? `/console/post/${id}` : "/console/post"
   const blocks64 = post ? btoa(encodeURIComponent(JSON.stringify(post.blocks))) : ""
   return c.render(<>
@@ -196,12 +196,12 @@ app.delete('/console/post/:id', async (c) => {
 })
 
 app.get('/post/:id', async (c) => {
+  const isLogin = c.env.isLogin
   const id = c.req.param('id')
-  const post = await getPost(c.env.DATABASE, id)
+  const post = await getPost(c.env.DATABASE, id, isLogin)
   if (!post) {
     return c.notFound()
   }
-  const isLogin = c.env.isLogin
   const date = new Date(post.created_at)
   return c.render(<>
     <header>
@@ -235,7 +235,7 @@ app.get('/', async (c) => {
   const page = parseInt(c.req.query("page") ?? "1")
   const meta = await getHomepageMetadata(c.env.DATABASE)
   const size = 5
-  const posts = await getPosts(c.env.DATABASE, page, size)
+  const posts = await getPosts(c.env.DATABASE, page, size, isLogin)
   return c.render(<>
     <header>
       <h1 dangerouslySetInnerHTML={{ __html: meta["blog_name"] }} />

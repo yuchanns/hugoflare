@@ -1,6 +1,6 @@
-import { desc, eq, inArray } from "drizzle-orm";
+import { desc, eq, inArray, and } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
-import { sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export interface Text {
   text: string
@@ -62,6 +62,7 @@ const tblPost = sqliteTable("Post", {
   tags: text("tags", { mode: "json" }).$type<string[]>().notNull(),
   content: text("content").notNull(),
   blocks: text("blocks", { mode: "json" }).$type<Block[]>().notNull(),
+  is_draft: integer("is_draft", { mode: "boolean" }).default(true).notNull(),
   created_at: text("created_at").notNull(),
   updated_at: text("updated_at").notNull(),
   deleted_at: text("deleted_at"),
@@ -82,17 +83,27 @@ export const getHomepageMetadata = async (DB: D1Database) => {
   }))
 }
 
-export const getPosts = async (DB: D1Database, page: number, size: number) => {
+export const getPosts = async (DB: D1Database, page: number, size: number, includeDraft: boolean) => {
   const db = drizzle(DB)
   page = page <= 0 ? 1 : page
+  const isDraft = [false]
+  if (includeDraft) {
+    isDraft.push(true)
+  }
   return await db.select().from(tblPost).
-    offset((page - 1) * size).limit(size).orderBy(desc(tblPost.created_at))
+    offset((page - 1) * size).limit(size).
+    where(inArray(tblPost.is_draft, isDraft)).orderBy(desc(tblPost.created_at))
 }
 
-export const getPost = async (DB: D1Database, id: string) => {
+export const getPost = async (DB: D1Database, id: string, includeDraft: boolean) => {
   const db = drizzle(DB)
+  const isDraft = [false]
+  if (includeDraft) {
+    isDraft.push(true)
+  }
+  console.log(isDraft)
   return await db.select().from(tblPost).
-    where(eq(tblPost.id, id)).get()
+    where(and(eq(tblPost.id, id), inArray(tblPost.is_draft, isDraft))).get()
 }
 
 export const deletePost = async (DB: D1Database, id: string) => {
