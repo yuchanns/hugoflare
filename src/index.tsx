@@ -253,7 +253,10 @@ app.get('/', async (c) => {
     </p >
     <hr />
     <div class="posts">
-      {posts.map(async ({ id, title, blocks }) => {
+      {posts.map(async ({ id, title, blocks, is_draft }) => {
+        if (is_draft) {
+          title = `[draft] ${title}`
+        }
         return <div class="post">
           <p><a class="title"
             hx-trigger="click"

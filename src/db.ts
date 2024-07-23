@@ -101,7 +101,6 @@ export const getPost = async (DB: D1Database, id: string, includeDraft: boolean)
   if (includeDraft) {
     isDraft.push(true)
   }
-  console.log(isDraft)
   return await db.select().from(tblPost).
     where(and(eq(tblPost.id, id), inArray(tblPost.is_draft, isDraft))).get()
 }
