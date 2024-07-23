@@ -109,3 +109,19 @@ pre > code {
 img {
     width: 100%;
 }
+
+.radio-group {
+  max-width: 650px;
+  text-align: center;
+  font-family: var(--font-family);
+}
+
+.radio-label {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.radio-text {
+  font-size: 80%;
+  color: var(--border-bottom-color);
+}

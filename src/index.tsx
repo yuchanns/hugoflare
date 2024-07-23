@@ -132,56 +132,52 @@ app.post('/console/post/:id?', async (c) => {
   const title = body.get("title") ?? ''
   const formBlocks = body.getAll("blocks")
   const blocks: Block[] = []
+  const isPublish = (body.get("is_publish") ?? "0") == "1"
+  const relocate = (body.get("relocate") ?? "true") == "true"
   for (const formBlock of formBlocks) {
     const block = JSON.parse(formBlock) as Block
     blocks.push(block)
   }
-  id = await savePost(c.env.DATABASE, { title, blocks: blocks }, id)
-  return c.json({}, 200, {
-    "HX-Location": JSON.stringify({ path: `/post/${id}`, target: "body", swap: "innerHTML" }),
-  })
+  id = await savePost(c.env.DATABASE, { title, blocks: blocks, is_draft: !isPublish }, id)
+  let headers: Record<string, string | string[]> = {}
+  if (relocate) {
+    headers["HX-Location"] = JSON.stringify({ path: `/post/${id}`, target: "body", swap: "innerHTML" })
+  }
+  return c.json({}, 200, headers)
 })
 
 app.get('/console/post/:id?', async (c) => {
   const id = c.req.param("id")
-  const post = id ? await getPost(c.env.DATABASE, id, true) : ""
-  const saveUrl = id ? `/console/post/${id}` : "/console/post"
+  if (!id) {
+    const id = await savePost(c.env.DATABASE, { title: "New Post", blocks: [], is_draft: true })
+    return c.json({}, 200, {
+      "HX-Location": JSON.stringify({ path: `/console/post/${id}`, target: "body", swap: "innerHTML" })
+    })
+  }
+  const post = await getPost(c.env.DATABASE, id, true)
   const blocks64 = post ? btoa(encodeURIComponent(JSON.stringify(post.blocks))) : ""
+  const is_draft = post ? post.is_draft : true
   return c.render(<>
-    <form
-      hx-post="/"
-      hx-swap="none"
-      hx-on--config-request={`
-        event.preventDefault()
-        const save = async () => {
-          const data = await editor.save()
-          await htmx.ajax('POST', '${saveUrl}', {
-            swap: 'none',
-            values: {
-              blocks: data.blocks,
-              title: htmx.find('#title').value
-            }
-          })
-        }
-        Promise.all([save()])
-      `}
-      hx-on--after-request={`
-        if (event.detail.xhr.status != 200) {
-          alert('Save failed!')
-        }
-      `}>
-      <header>
-        <h1><input id="title" type="text" name="title" required placeholder="Title" value={post ? post.title : ""} /></h1>
-      </header>
-      <div id="editor" />
-      <div style="text-align: center">
-        <input type="submit" value="Save" />
-      </div>
-    </form>
+    <header>
+      <h1><input id="title" type="text" name="title" required placeholder="Title" value={post ? post.title : ""} /></h1>
+    </header>
+    <div class="radio-group">
+      <label class="radio-label">
+        <input type="radio" name="is_publish" value="1" checked={!is_draft} />
+        <span class="radio-text">Publish</span>
+      </label>
+      <label class="radio-label">
+        <input type="radio" name="is_publish" value="0" checked={is_draft} />
+        <span class="radio-text">Draft</span>
+      </label>
+    </div>
+    <div id="editor" />
     <div id="script">
       <div id="data" data-vals={blocks64} />
+      <div id="id" data-vals={id} />
     </div>
     <script src="/static/editor.js" />
+    <p style="font-style: italic; font-size: 80%">Auto Saved at: <span id="save-point">never</span></p>
     <hr />
     {back()}
   </>)
@@ -254,17 +250,16 @@ app.get('/', async (c) => {
     <hr />
     <div class="posts">
       {posts.map(async ({ id, title, blocks, is_draft }) => {
-        if (is_draft) {
-          title = `[draft] ${title}`
-        }
         return <div class="post">
-          <p><a class="title"
-            hx-trigger="click"
-            hx-get={`/post/${id}`}
-            hx-swap="innerHTML show:window:top"
-            hx-target="body"
-            hx-push-url="true"
-            dangerouslySetInnerHTML={{ __html: title }} />
+          <p>
+            {is_draft ? <span style="font-size: 80%;" dangerouslySetInnerHTML={{ __html: "[[ draft ]] " }} /> : <></>}
+            <a class="title"
+              hx-trigger="click"
+              hx-get={`/post/${id}`}
+              hx-swap="innerHTML show:window:top"
+              hx-target="body"
+              hx-push-url="true"
+              dangerouslySetInnerHTML={{ __html: title }} />
             {isLogin && <>
               <a class="action"
                 hx-trigger="click"
@@ -283,15 +278,16 @@ app.get('/', async (c) => {
           <div dangerouslySetInnerHTML={{ __html: `${await marked.parse(ellipsisText(blocksToText(blocks), 200), { renderer: mdrender })}` }} />
         </div>
       })}
-    </div>
-    {posts.length == size && <div id="page"
-      hx-get={`/?page=${page + 1}`}
-      hx-trigger="revealed"
-      hx-target=".posts"
-      hx-swap="beforeend"
-      hx-select=".post"
-      hx-select-oob="#page"
-      dangerouslySetInnerHTML={{ __html: "Loading..." }} /> ||
+    </div >
+    {
+      posts.length == size && <div id="page"
+        hx-get={`/?page=${page + 1}`}
+        hx-trigger="revealed"
+        hx-target=".posts"
+        hx-swap="beforeend"
+        hx-select=".post"
+        hx-select-oob="#page"
+        dangerouslySetInnerHTML={{ __html: "Loading..." }} /> ||
       <div id="page" />
     }
   </>

@@ -195,14 +195,14 @@ const buildContent = (blocks: Block[]) => {
   return contents.join("\r\n")
 }
 
-export const savePost = async (DB: D1Database, post: { title: string, blocks: Block[] }, id?: string) => {
+export const savePost = async (DB: D1Database, post: { title: string, blocks: Block[], is_draft: boolean }, id?: string) => {
   const db = drizzle(DB)
   const timestamp = String(Date.now())
-  const { title, blocks } = post
+  const { title, blocks, is_draft } = post
   const content = buildContent(blocks)
   if (id) {
     await db.update(tblPost).
-      set({ title, blocks, content }).
+      set({ title, blocks, content, is_draft }).
       where(eq(tblPost.id, id))
     return id
   }
@@ -213,6 +213,7 @@ export const savePost = async (DB: D1Database, post: { title: string, blocks: Bl
     tags: [],
     content,
     blocks,
+    is_draft,
     created_at: timestamp,
     updated_at: timestamp,
   }
