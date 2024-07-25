@@ -30,6 +30,7 @@ export type Bindings = {
   R2DOMAIN: string
 
   isLogin: boolean
+  meta: Record<string, string>
 }
 
 

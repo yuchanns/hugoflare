@@ -33,6 +33,9 @@ app.use(async (c, next) => {
   const token = getCookie(c, "token") ?? ''
   c.env.isLogin = await verify(token, c.env.JWT_SECRET).
     then(() => true).catch(() => false)
+
+  c.env.meta = await getHomepageMetadata(c.env.DATABASE)
+
   await next()
 }).use(renderer)
 
@@ -229,7 +232,7 @@ app.get('/', async (c) => {
   const entryPath = isLogin ? "/console/post" : "/console-login"
 
   const page = parseInt(c.req.query("page") ?? "1")
-  const meta = await getHomepageMetadata(c.env.DATABASE)
+  const meta = c.env.meta
   const size = 5
   const posts = await getPosts(c.env.DATABASE, page, size, isLogin)
   return c.render(<>
