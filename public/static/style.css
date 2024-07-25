@@ -69,6 +69,8 @@ input[type=password] {
 
 .code {
     padding-left: calc(10% - 2em);
+    font-size: 100%;
+    line-height: 1.25;
 }
 
 ul {
