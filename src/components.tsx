@@ -16,6 +16,7 @@ export const renderer = jsxRenderer(({ title, children }, c: Context<{ Bindings:
         <meta name="twitter:title" content=${title} />
         <script src="/static/htmx.min.js"></script>
         <link rel="stylesheet" href="/static/style.css">
+        <link rel="stylesheet" href="/static/theme.css">
         <title>${title} | BlockFlare</title>
       </head>
       <body>

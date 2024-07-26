@@ -6,6 +6,7 @@ import { HTTPException } from 'hono/http-exception'
 import { jwt, sign, verify } from 'hono/jwt'
 import { Bindings, blocksToText, ellipsisText } from './utils'
 import { getCookie } from 'hono/cookie'
+import hljs from 'highlight.js/lib/common'
 
 const auth = "token"
 
@@ -24,7 +25,10 @@ mdrender.blockquote = ({ tokens }) => {
 }
 
 mdrender.code = ({ text, lang }) => {
-  return `<div class="code ${lang}"><pre><code>${text}</code></pre></div>`
+  if (!lang || lang == "") {
+    lang = "plaintext"
+  }
+  return `<div class="code ${lang}"><pre><code>${hljs.highlight(text, { language: lang }).value}</code></pre></div>`
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -132,13 +136,13 @@ app.post('/console/upload-image', async (c) => {
 app.post('/console/post/:id?', async (c) => {
   let id = c.req.param("id")
   const body = await c.req.formData()
-  const title = body.get("title") ?? ''
+  const title = body.get("title")?.toString() ?? ''
   const formBlocks = body.getAll("blocks")
   const blocks: Block[] = []
   const isPublish = (body.get("is_publish") ?? "0") == "1"
   const relocate = (body.get("relocate") ?? "true") == "true"
   for (const formBlock of formBlocks) {
-    const block = JSON.parse(formBlock) as Block
+    const block = JSON.parse(formBlock.toString()) as Block
     blocks.push(block)
   }
   id = await savePost(c.env.DATABASE, { title, blocks: blocks, is_draft: !isPublish }, id)
