@@ -8,6 +8,7 @@ export interface Text {
 
 export interface Code {
   code: string
+  language?: string
 }
 
 export interface Paragraph {
@@ -181,7 +182,8 @@ const buildContent = (blocks: Block[]) => {
       case "code":
         {
           const data = block.data as Code
-          contents.push(`\`\`\`\n${data.code}\n\`\`\`\r\n`)
+          const lang = data.language ?? "plain"
+          contents.push(`\`\`\`${lang}\n${data.code}\n\`\`\`\r\n`)
         }
         break
       case "text":

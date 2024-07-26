@@ -108,7 +108,7 @@ var loadEditorJS = async () => {
     loadScript('/static/editorjs/nested-list@1.4.2.umd.min.js'),
     loadScript('/static/editorjs/quote@2.6.0.umd.min.js'),
     loadScript('/static/editorjs/image@2.9.1.umd.min.js'),
-    loadScript('/static/editorjs/code@2.9.0.umd.min.js'),
+    loadScript('/static/editorjs/codecup@1.1.1.bundle.min.js'),
     loadScript('/static/editorjs/inline-code@1.5.0.umd.min.js'),
   ])
 
@@ -154,7 +154,7 @@ var loadEditorJS = async () => {
           }
         }
       },
-      code: CodeTool,
+      code: editorJsCodeCup,
       inlineCode: InlineCode,
     },
     data: {
