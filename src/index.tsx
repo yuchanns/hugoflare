@@ -205,6 +205,8 @@ app.get('/post/:id', async (c) => {
   if (!post) {
     return c.notFound()
   }
+  const meta = c.env.meta
+  meta["blog_desc"] = ellipsisText(blocksToText(post.blocks), 200)
   const date = new Date(post.created_at)
   return c.render(<>
     <header>
