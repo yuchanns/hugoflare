@@ -7,6 +7,7 @@ import { jwt, sign, verify } from 'hono/jwt'
 import { Bindings, blocksToText, ellipsisText } from './utils'
 import { getCookie } from 'hono/cookie'
 import hljs from 'highlight.js/lib/common'
+import { robots } from './robots'
 
 const auth = "token"
 
@@ -231,6 +232,10 @@ app.get('/post/:id', async (c) => {
     </>}
     {back()}
   </>, { title: post.title })
+})
+
+app.get('/robots.txt', (c) => {
+  return c.text(robots)
 })
 
 app.get('/', async (c) => {
