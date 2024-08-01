@@ -15,6 +15,9 @@ export const renderer = jsxRenderer(({ title, children }, c: Context<{ Bindings:
         <meta name="twitter:site" content="@_yuchanns_" />
         <meta name="twitter:title" content="${title}" />
         <meta name="twitter:description" content="${meta['blog_desc']}" />
+        <meta name="og:image" content="${meta['blog_avatar']}" />
+        <meta name="og:title" content="${title}" />
+        <meta name="og:description" content="${meta['blog_desc']}" />
         <script src="/static/htmx.min.js"></script>
         <link rel="stylesheet" href="/static/style.css">
         <link rel="stylesheet" href="/static/theme.css">
