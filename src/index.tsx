@@ -268,6 +268,7 @@ app.get('/', async (c) => {
               hx-swap="innerHTML show:window:top"
               hx-target="body"
               hx-push-url="true"
+              href={`/post/${id}`}
               dangerouslySetInnerHTML={{ __html: title }} />
             {isLogin && <>
               <a class="action"
