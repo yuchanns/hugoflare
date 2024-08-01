@@ -11,9 +11,9 @@ export const renderer = jsxRenderer(({ title, children }, c: Context<{ Bindings:
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="twitter:card" content="summary" />
-        <meta name="twitter:image" content=${meta["blog_avatar"]} />
+        <meta name="twitter:image" content="${meta['blog_avatar']}" />
         <meta name="twitter:site" content="@_yuchanns_" />
-        <meta name="twitter:title" content=${title} />
+        <meta name="twitter:title" content="${title}" />
         <script src="/static/htmx.min.js"></script>
         <link rel="stylesheet" href="/static/style.css">
         <link rel="stylesheet" href="/static/theme.css">
