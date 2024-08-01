@@ -19,13 +19,13 @@ export const renderer = jsxRenderer(({ title, children }, c: Context<{ Bindings:
         <meta name="og:title" content="${title}" />
         <meta name="og:description" content="${meta['blog_desc']}" />
         <meta name="description" content="${meta['blog_desc']}" />
-        <script src="/static/htmx.min.js"></script>
         <link rel="stylesheet" href="/static/style.css">
         <link rel="stylesheet" href="/static/theme.css">
         <title>${title} | BlockFlare</title>
       </head>
       <body>
-          ${children}
+        ${children}
+        <script src="/static/htmx.min.js"></script>
       </body>
     </html>
   `
