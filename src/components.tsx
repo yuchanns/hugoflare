@@ -7,7 +7,7 @@ export const renderer = jsxRenderer(({ title, children }, c: Context<{ Bindings:
   const meta = c.env.meta
   return html`
     <!DOCTYPE html>
-    <html>
+    <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="twitter:card" content="summary" />
