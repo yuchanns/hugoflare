@@ -1,4 +1,4 @@
-import { Hono } from 'hono'
+import { Hono } from 'hono/tiny'
 import { back, renderer } from './components'
 import { Block, deletePost, getHomepageMetadata, getPost, getPosts, savePost } from './db'
 import { marked } from 'marked'

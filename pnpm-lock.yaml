@@ -15,8 +15,8 @@ importers:
         specifier: ^11.10.0
         version: 11.10.0
       hono:
-        specifier: ^4.4.7
-        version: 4.4.7
+        specifier: ^4.5.3
+        version: 4.5.3
       marked:
         specifier: ^13.0.0
         version: 13.0.0
@@ -26,10 +26,10 @@ importers:
         version: 4.20240620.0
       '@hono/vite-cloudflare-pages':
         specifier: ^0.4.1
-        version: 0.4.1(hono@4.4.7)
+        version: 0.4.1(hono@4.5.3)
       '@hono/vite-dev-server':
         specifier: ^0.12.1
-        version: 0.12.2(hono@4.4.7)
+        version: 0.12.2(hono@4.5.3)
       typed-htmx:
         specifier: ^0.3.1
         version: 0.3.1
@@ -679,8 +679,8 @@ packages:
     resolution: {integrity: sha512-SYVnVFswQER+zu1laSya563s+F8VDGt7o35d4utbamowvUNLLMovFqwCLSocpZTz3MgaSRA1IbqRWZv97dtErQ==}
     engines: {node: '>=12.0.0'}
 
-  hono@4.4.7:
-    resolution: {integrity: sha512-WoQWFQyVFEVRtIzP5sHPv7nvIw+RYL/HRnvnOCDxj6A+BtrwuC9S0vryZbV4IyFcNgOJ87r/phDiC1x2eEo4Gg==}
+  hono@4.5.3:
+    resolution: {integrity: sha512-r26WwwbKD3BAYdfB294knNnegNda7VfV1tVn66D9Kvl9WQTdrR+5eKdoeaQNHQcC3Gr0KBikzAtjd6VsRGVSaw==}
     engines: {node: '>=16.0.0'}
 
   is-binary-path@2.1.0:
@@ -840,8 +840,8 @@ packages:
     resolution: {integrity: sha512-6WSPsukTIOEMsVbx5wzgVSvldLmgBUVcFIm2vJlBpRPtcbDOGC5y1IYrCWNX1yUlNsrv1Ngcw4gGM8jsPyNV7w==}
     engines: {node: '>=12'}
 
-  ufo@1.5.3:
-    resolution: {integrity: sha512-Y7HYmWaFwPUmkoQCUIAYpKqkOf+SbVj/2fJJZ4RJMCfZp0rTGwRbzQD+HghfnhKOjL9E01okqz+ncJskGYfBNw==}
+  ufo@1.5.4:
+    resolution: {integrity: sha512-UsUk3byDzKd04EyoZ7U4DOlxQaD14JUKQl6/P7wiX4FNvUfm3XL246n9W5AmqwW5RSFJ27NAuM0iLscAOYUiGQ==}
 
   undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
@@ -1093,14 +1093,14 @@ snapshots:
 
   '@hono/node-server@1.11.4': {}
 
-  '@hono/vite-cloudflare-pages@0.4.1(hono@4.4.7)':
+  '@hono/vite-cloudflare-pages@0.4.1(hono@4.5.3)':
     dependencies:
-      hono: 4.4.7
+      hono: 4.5.3
 
-  '@hono/vite-dev-server@0.12.2(hono@4.4.7)':
+  '@hono/vite-dev-server@0.12.2(hono@4.5.3)':
     dependencies:
       '@hono/node-server': 1.11.4
-      hono: 4.4.7
+      hono: 4.5.3
       miniflare: 3.20240610.1
       minimatch: 9.0.4
     transitivePeerDependencies:
@@ -1322,7 +1322,7 @@ snapshots:
 
   highlight.js@11.10.0: {}
 
-  hono@4.4.7: {}
+  hono@4.5.3: {}
 
   is-binary-path@2.1.0:
     dependencies:
@@ -1481,7 +1481,7 @@ snapshots:
     dependencies:
       typed-html: 3.0.1
 
-  ufo@1.5.3: {}
+  ufo@1.5.4: {}
 
   undici-types@5.26.5: {}
 
@@ -1496,7 +1496,7 @@ snapshots:
       mime: 3.0.0
       node-fetch-native: 1.6.4
       pathe: 1.1.2
-      ufo: 1.5.3
+      ufo: 1.5.4
 
   vite@5.3.1(@types/node@20.14.8):
     dependencies:
