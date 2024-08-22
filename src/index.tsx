@@ -6,7 +6,6 @@ import { HTTPException } from 'hono/http-exception'
 import { jwt, sign, verify } from 'hono/jwt'
 import { Bindings, blocksToText, ellipsisText } from './utils'
 import { getCookie } from 'hono/cookie'
-import hljs from 'highlight.js/lib/common'
 import { robots } from './robots'
 
 const auth = "token"
@@ -29,7 +28,7 @@ mdrender.code = ({ text, lang }) => {
   if (!lang || lang == "") {
     lang = "plaintext"
   }
-  return `<div class="code ${lang}"><pre><code>${hljs.highlight(text, { language: lang }).value}</code></pre></div>`
+  return `<div class="code ${lang}"><pre><code>${text}</code></pre></div>`
 }
 
 const app = new Hono<{ Bindings: Bindings }>()

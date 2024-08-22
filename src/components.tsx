@@ -20,7 +20,7 @@ export const renderer = jsxRenderer(({ title, children }, c: Context<{ Bindings:
         <meta name="og:description" content="${meta['blog_desc']}" />
         <meta name="description" content="${meta['blog_desc']}" />
         <link rel="stylesheet" href="/static/style.css">
-        <link rel="stylesheet" href="/static/theme.css">
+        <!-- <link rel="stylesheet" href="/static/theme.css"> -->
         <title>${title} | BlockFlare</title>
       </head>
       <body>
