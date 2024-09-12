@@ -88,11 +88,14 @@ ul > li::marker {
 
 pre {
     margin: 0;
-    overflow: scroll;
+    /* overflow: scroll; */
 }
 
 pre > code {
-    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
     position: relative;
     font-family: var(--font-family);
 }
