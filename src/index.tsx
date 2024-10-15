@@ -276,6 +276,14 @@ app.get('/post/:id', async (c) => {
 //   return c.text(robots)
 // })
 
+app.get('/favicon.ico', async (c) => {
+  const imageUrl = c.env.meta["blog_avatar"]
+  const response = await fetch(imageUrl)
+  const buffer = await response.arrayBuffer()
+  c.header("Content-Type", response.headers.get("Content-Type") ?? "image/png")
+  return c.body(buffer)
+})
+
 app.get('/', async (c) => {
   const isLogin = c.env.isLogin
   const entryPath = isLogin ? "/console/post" : "/console-login"
