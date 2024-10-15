@@ -90,6 +90,10 @@ const feed = async (c: Context<{ Bindings: Bindings }>) => {
     `
   }).join('')}
   </channel>
+  <follow_challenge>
+    <feedId>68923460847671296</feedId>
+    <userId>68649709680722944</userId>
+  </follow_challenge>
 </rss>`, 200, { "Content-Type": "application/xml" })
 }
 
