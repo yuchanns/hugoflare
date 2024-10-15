@@ -77,7 +77,7 @@ const feed = async (c: Context<{ Bindings: Bindings }>) => {
       <item>
         <title>${post.title}</title>
         <link>${siteUrl}/post/${post.id}</link>
-        <description>${post.title}</description>
+        <description>${marked.parse(post.content, { renderer: mdrender })}</description>
         <pubDate>${new Date(post.created_at).toUTCString()}</pubDate>
         <guid isPermaLink="false">${siteUrl}/post/${post.id}</guid>
         <category>blog</category>
