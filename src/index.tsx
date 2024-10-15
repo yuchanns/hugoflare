@@ -70,7 +70,7 @@ const feed = async (c: Context<{ Bindings: Bindings }>) => {
   <channel>
     <title>${c.env.meta["blog_name"]}</title>
     <link>${siteUrl}</link>
-    <description>${c.env.meta["blog_desc"]}</description>
+    <description>feedId:68923460847671296+userId:68649709680722944</description>
     <lastBuildDate>${lastBuildDate}</lastBuildDate>
     ${posts.map(post => {
     return `
@@ -90,10 +90,6 @@ const feed = async (c: Context<{ Bindings: Bindings }>) => {
     `
   }).join('')}
   </channel>
-  <follow_challenge>
-    <feedId>68923460847671296</feedId>
-    <userId>68649709680722944</userId>
-  </follow_challenge>
 </rss>`, 200, { "Content-Type": "application/xml" })
 }
 
