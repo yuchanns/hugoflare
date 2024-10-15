@@ -86,14 +86,16 @@ export const getHomepageMetadata = async (DB: D1Database) => {
 
 export const getPosts = async (DB: D1Database, page: number, size: number, includeDraft: boolean) => {
   const db = drizzle(DB)
-  page = page <= 0 ? 1 : page
   const isDraft = [false]
   if (includeDraft) {
     isDraft.push(true)
   }
-  return await db.select().from(tblPost).
-    offset((page - 1) * size).limit(size).
+  const q = db.select().from(tblPost).
     where(inArray(tblPost.is_draft, isDraft)).orderBy(desc(tblPost.created_at))
+  if (page > 0) {
+    q.offset((page - 1) * size).limit(size)
+  }
+  return await q
 }
 
 export const getPost = async (DB: D1Database, id: string, includeDraft: boolean) => {

@@ -6,7 +6,7 @@ import { HTTPException } from 'hono/http-exception'
 import { jwt, sign, verify } from 'hono/jwt'
 import { Bindings, blocksToText, ellipsisText } from './utils'
 import { getCookie } from 'hono/cookie'
-import { robots } from './robots'
+// import { robots } from './robots'
 
 const auth = "token"
 
@@ -57,6 +57,34 @@ app.onError((err, c) => {
     </header>
     {back()}
   </>, { title: err.message })
+})
+
+app.get('/feed.xml', async (c) => {
+  const u = new URL(c.req.url)
+  const siteUrl = `${u.protocol}//${u.hostname}`
+  const posts = await getPosts(c.env.DATABASE, -1, 0, false)
+  const lastBuildDate = new Date(posts[0]?.created_at).toUTCString()
+  return c.newResponse(`<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+  <channel>
+    <title>${c.env.meta["blog_name"]}</title>
+    <link>${siteUrl}</link>
+    <description>${c.env.meta["blog_desc"]}</description>
+    <lastBuildDate>${lastBuildDate}</lastBuildDate>
+    ${posts.map(post => {
+    return `
+      <item>
+        <title>${post.title}</title>
+        <link>${siteUrl}/post/${post.id}</link>
+        <description>${post.title}</description>
+        <pubDate>${new Date(post.created_at).toUTCString()}</pubDate>
+        <guid isPermaLink="false">${siteUrl}/post/${post.id}</guid>
+        <category>blog</category>
+      </item>
+    `
+  }).join('')}
+  </channel>
+</rss>`, 200, { "Content-Type": "application/xml" })
 })
 
 app.post('/console-login', async (c) => {
@@ -233,9 +261,9 @@ app.get('/post/:id', async (c) => {
   </>, { title: post.title })
 })
 
-app.get('/robots.txt', (c) => {
-  return c.text(robots)
-})
+// app.get('/robots.txt', (c) => {
+//   return c.text(robots)
+// })
 
 app.get('/', async (c) => {
   const isLogin = c.env.isLogin
