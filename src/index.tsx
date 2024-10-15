@@ -6,6 +6,7 @@ import { HTTPException } from 'hono/http-exception'
 import { jwt, sign, verify } from 'hono/jwt'
 import { Bindings, blocksToText, ellipsisText } from './utils'
 import { getCookie } from 'hono/cookie'
+import { Context } from 'hono'
 // import { robots } from './robots'
 
 const auth = "token"
@@ -59,7 +60,7 @@ app.onError((err, c) => {
   </>, { title: err.message })
 })
 
-app.get('/feed.xml', async (c) => {
+const feed = async (c: Context<{ Bindings: Bindings }>) => {
   const u = new URL(c.req.url)
   const siteUrl = `${u.protocol}//${u.hostname}`
   const posts = await getPosts(c.env.DATABASE, -1, 0, false)
@@ -85,7 +86,12 @@ app.get('/feed.xml', async (c) => {
   }).join('')}
   </channel>
 </rss>`, 200, { "Content-Type": "application/xml" })
-})
+}
+
+app.get('/feed.xml', feed).
+  get('/feed', feed).
+  get('/rss', feed).
+  get('/rss.xml', feed)
 
 app.post('/console-login', async (c) => {
   const body = await c.req.formData()
