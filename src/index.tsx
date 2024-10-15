@@ -77,7 +77,12 @@ const feed = async (c: Context<{ Bindings: Bindings }>) => {
       <item>
         <title>${post.title}</title>
         <link>${siteUrl}/post/${post.id}</link>
-        <description>${marked.parse(post.content, { renderer: mdrender })}</description>
+        <description><![CDATA[
+          ${ellipsisText(blocksToText(post.blocks), 200)}
+        ]]></description>
+        <content:encoded><![CDATA[
+          ${marked.parse(post.content, { renderer: mdrender })}
+        ]]></content:encoded>
         <pubDate>${new Date(post.created_at).toUTCString()}</pubDate>
         <guid isPermaLink="false">${siteUrl}/post/${post.id}</guid>
         <category>blog</category>
