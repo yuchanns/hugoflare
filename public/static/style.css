@@ -33,6 +33,14 @@ a.button {
     cursor: pointer;
 }
 
+a:not(.button, .action):visited {
+    color: #f6821f;
+}
+
+a:not(.button, .action) {
+    color: #f6821f;
+}
+
 table {
     margin: auto;
 }
