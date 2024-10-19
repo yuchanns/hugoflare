@@ -33,6 +33,10 @@ a.button {
     cursor: pointer;
 }
 
+a.title {
+    text-decoration: none;
+}
+
 a:not(.button, .action):visited {
     color: #f6821f;
 }
