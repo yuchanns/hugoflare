@@ -35,13 +35,18 @@ a.button {
 
 a.title {
     text-decoration: none;
+    color: #000000;
 }
 
-a:not(.button, .action):visited {
+a.title:visited {
+    color: #000000;
+}
+
+a:not(.button, .action, .title):visited {
     color: #f6821f;
 }
 
-a:not(.button, .action) {
+a:not(.button, .action, .title) {
     color: #f6821f;
 }
 
