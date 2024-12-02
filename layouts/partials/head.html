@@ -19,7 +19,7 @@
 <meta name="description" content='{{ .Summary }}' />
 <meta name="twitter:description" content='{{ .Summary }}' />
 {{ end }}
-{{ $style := resources.Get "style.css" }}
+{{ $style := resources.Get "style.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $style.RelPermalink }}">
 {{ if .IsHome }}
 <title>Home|{{ .Site.Title }}</title>

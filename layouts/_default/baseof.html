@@ -5,7 +5,7 @@
 </head>
 <body>
   {{ block "main" . }}{{ end }}
-  {{ $htmx := resources.Get "htmx.min.js" }}
+  {{ $htmx := resources.Get "htmx.js" | js.Build "htmx.js" | minify | fingerprint }}
   <script src="{{ $htmx.RelPermalink }}" ></script>
 </body>
 </html>
