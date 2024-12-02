@@ -8,6 +8,7 @@ paginate = 5
 style = "algol_nu"
 
 [params]
+author = "Hanchin Hsieh"
 avatar = 'https://avatars.githubusercontent.com/u/25029451?s=400&u=0c7eaf9379b7ce31bc02843a9568fac73a77cd8f&v=4'
 desc = "AKA yuchanns. I'm a developer passionate about FOSS, and a big Fan of LiSA(織部 里沙). You can ask me about Go, CloudNative, Nvim, and Asahi Linux."
 twitter = '_yuchanns_'
