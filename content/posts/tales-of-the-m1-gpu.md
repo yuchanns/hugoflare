@@ -2,6 +2,7 @@
 title = '[译] 关于 M1 GPU 的故事'
 date = 2022-11-29T13:40:40+08:00
 draft = false
+aliases = ["/post/773516f4-ec40-474e-9c9f-9f96398c9e3e"]
 +++
 大家好，我是朝日丽奈！
 

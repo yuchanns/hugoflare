@@ -2,6 +2,7 @@
 title = 'Bridging Rust and Native Go'
 date = 2024-07-27T13:15:26+08:00
 draft = false
+aliases = ["/post/83397808-6849-4bc5-8a09-18765efdfa20"]
 +++
 
 Hello everyone, yuchanns here!<br>

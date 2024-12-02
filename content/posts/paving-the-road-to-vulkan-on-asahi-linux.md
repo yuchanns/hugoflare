@@ -2,6 +2,7 @@
 title = '[译] 在 Asahi Linux 上铺设通往 Vulkan 的道路'
 date = 2023-03-20T13:40:56+08:00
 draft = false
+aliases = ["/post/dbcb370f-f455-4c04-8d10-ede1e3544383"]
 +++
 
 大家好，我是朝日丽奈！✨
