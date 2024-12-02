@@ -1,0 +1,147 @@
+:root {
+    --border-bottom-color: #737373;
+    --font-family: Cantarell,sans-serif;
+}
+
+body {
+    font-family: var(--font-family);
+    font-size: 120%;
+    max-width: 40em;
+    margin: 0 auto;
+    padding: 0 1em 1em 1em;
+    line-height: 1.6;
+}
+
+header {
+    text-align: center;
+}
+
+a.action {
+    cursor: pointer;
+    font-style: italic;
+    font-size: 80%;
+}
+
+a.title {
+    text-decoration: underline;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+a.button {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a.title {
+    text-decoration: none;
+    color: #000000;
+}
+
+a.title:visited {
+    color: #000000;
+}
+
+a:not(.button, .action, .title):visited {
+    color: #f6821f;
+}
+
+a:not(.button, .action, .title) {
+    color: #f6821f;
+}
+
+table {
+    margin: auto;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+input[type=submit] {
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-family: var(--font-family);
+    font-size: 100%;
+}
+
+input[type=text] {
+    border: none;
+    border-bottom: 1px inset var(--border-bottom-color);
+    outline: none;
+    font-family: var(--font-family);
+    font-size: 120%;
+}
+
+input[type=password] {
+    border: none;
+    border-bottom: 1px inset var(--border-bottom-color);
+    outline: none;
+    font-family: var(--font-family);
+    font-size: 120%;
+}
+
+.highlight {
+    padding-left: calc(10% - 2em);
+    font-size: 100%;
+}
+
+ul {
+    list-style-type: disc;
+    margin-top: 1.25em;
+    margin-top: 1.25em;
+    padding-left: 1.625em;
+}
+
+ul > li::marker {
+    color: var(--border-bottom-color);
+}
+
+pre {
+    margin: 0;
+}
+
+pre > code {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    position: relative;
+    font-family: var(--font-family);
+}
+
+.inline-code::before {
+    content: "`";
+}
+
+.inline-code::after {
+    content: "`";
+}
+
+.inline-code {
+    font-weight: 600;
+    font-family: var(--font-family);
+}
+
+img {
+    width: 100%;
+}
+
+.radio-group {
+  max-width: 650px;
+  text-align: center;
+  font-family: var(--font-family);
+}
+
+.radio-label {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.radio-text {
+  font-size: 80%;
+  color: var(--border-bottom-color);
+}

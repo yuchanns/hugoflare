@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="{{ or site.Language.LanguageCode }}" dir="{{ or site.Language.LanguageDirection `ltr` }}">
+<head>
+  {{ partial "head.html" . }}
+</head>
+<body>
+  {{ block "main" . }}{{ end }}
+  {{ $htmx := resources.Get "htmx.min.js" }}
+  <script src="{{ $htmx.RelPermalink }}" ></script>
+</body>
+</html>

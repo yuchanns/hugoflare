@@ -1,0 +1,10 @@
+{{ define "main" }}
+  <header>
+    <h1>{{ .Title }}</h1>
+    <p>{{ .Date.Format "02 Jan 2006" }}</p>
+  </header>
+  <h1>{{ .Title }}</h1>
+  <div>{{ .Content }}</div>
+  <hr />
+  {{ partial "footer.html" }}
+{{ end }}

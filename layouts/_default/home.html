@@ -1,0 +1,35 @@
+{{ define "main" }}
+  {{ partial "header.html" }}
+  {{ $pages := where site.RegularPages "Type" "posts" }}
+  {{ $paginator := .Paginate $pages }}
+  <div class="posts">
+  {{ range $paginator.Pages }}
+    <div class="post">
+    <p>
+      <a class="title"
+        hx-trigger="click"
+        hx-get="{{ .RelPermalink }}"
+        hx-swap="innerHTML show:window:top"
+        hx-target="body"
+        hx-push-url="true"
+        href="{{ .RelPermalink }}"
+        >{{ .LinkTitle }}</a>
+    </p>
+    <div>{{ .Summary }}</div>
+    </div>
+  {{ end }}
+  </div>
+  {{ with $paginator }}
+  {{ if .HasNext }}
+  <div id="page"
+    hx-get="{{ .Next.URL }}"
+    hx-trigger="revealed"
+    hx-target=".posts"
+    hx-swap="beforeend"
+    hx-select=".post"
+    hx-select-oob="#page">Loading...</div>
+  {{ else }}
+  <div id="page"></div>
+  {{ end }}
+  {{ end }}
+{{ end }}
