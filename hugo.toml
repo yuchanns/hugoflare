@@ -6,6 +6,8 @@ paginate = 5
 
 [markup.highlight]
 style = "algol_nu"
+[markup.goldmark.parser.attribute]
+block = true
 
 [params]
 author = "Hanchin Hsieh"
