@@ -1,7 +1,7 @@
 baseURL = 'https://blog.yuchanns.xyz'
 languageCode = 'en-us'
 title = 'Blockflare'
-summaryLength = 20
+summaryLength = 10
 paginate = 5
 
 [markup.highlight]
