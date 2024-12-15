@@ -145,3 +145,8 @@ img {
   font-size: 80%;
   color: var(--border-bottom-color);
 }
+
+.summary > h2 {
+  font-size: 1em;
+  font-weight: normal;
+}
