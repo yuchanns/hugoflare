@@ -1,4 +1,4 @@
-baseURL = 'https://blog.yuchanns.xyz'
+baseURL = '/'
 languageCode = 'en-us'
 title = 'Blockflare'
 summaryLength = 10
