@@ -8,6 +8,18 @@ paginate = 5
 style = "algol_nu"
 [markup.goldmark.parser.attribute]
 block = true
+[markup.goldmark.extensions.typographer]
+disable = false
+apostrophe = '&apos;'
+ellipsis = '&hellip;'
+emDash = '&mdash;'
+enDash = '&ndash;'
+rightDoubleQuote = '&quot;'
+leftDoubleQuote = '&quot;'
+rightSingleQuote = '&apos;'
+leftSingleQuote = '&apos;'
+rightAngleQuote = '&rsaquo;'
+leftAngleQuote = '&lsaquo;'
 
 [params]
 author = "Hanchin Hsieh"
