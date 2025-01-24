@@ -150,3 +150,9 @@ img {
   font-size: 1em;
   font-weight: normal;
 }
+
+figure > figcaption {
+  font-size: 80%;
+  color: var(--border-bottom-color);
+  text-align: center;
+}
