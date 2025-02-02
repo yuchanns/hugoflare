@@ -14,10 +14,10 @@ This year marked my first serious ventures into international travel. I embarked
 
 Initially, I was apprehensive about traveling abroad. The prospect of navigating language barriers and relying solely on myself in foreign lands was daunting. However, with my wife's unwavering support, these challenges became opportunities for growth. She masterfully handled all the planning, from bookings to detailed itineraries, while gently encouraging me to step out of my comfort zone. I focused on managing our communications abroad, and together, we made an excellent team. To my pleasant surprise, I discovered that traveling internationally and interacting with people across language barriers wasn't nearly as challenging as I had imagined.
 
-![Collecting of Eiffel Tower](https://github.com/user-attachments/assets/ade41c44-4c08-46aa-a4d2-f958b3851f83)
-![Collecting of Tokyo Tower](https://github.com/user-attachments/assets/16ceb239-e9e9-4232-8962-154b08a90a4d)
+![Collecting of Eiffel Tower](https://oss.yuchanns.xyz/images/photo_2025-01-24_12-45-59.jpg)
+![Collecting of Tokyo Tower](https://oss.yuchanns.xyz/images/photo_2025-01-24_12-46-02.jpg)
 
-![Monna Lisa in Louvre](https://github.com/user-attachments/assets/e30ae80f-a396-4f82-99bc-4296d32dabbd)
+![Monna Lisa in Louvre](https://oss.yuchanns.xyz/images/photo_2025-01-24_12-46-07.jpg)
 
 A significant milestone this year was my marriage on May 21st, 2024. Instead of a traditional wedding ceremony, we chose to celebrate our union with our European journey - a decision that created unforgettable memories for both of us.
 
@@ -25,7 +25,7 @@ My wife has been an incredible source of inspiration and support throughout the 
 
 She consistently pushes me to be better and strive for more, serving as my primary motivation to keep moving forward. I look forward to many more years of mutual growth and support together.
 
-![Wife secured](https://github.com/user-attachments/assets/fe455819-5761-491a-9c6c-493f172d656d)
+![Wife secured](https://oss.yuchanns.xyz/images/photo_2025-01-24_12-51-49.jpg)
 
 ## Coding
 
@@ -33,7 +33,7 @@ This year saw a significant focus on Rust-related projects in my development jou
 
 While I stepped down from my role as a reviewer in the [nerdctl](https://github.com/containerd/nerdctl) community in February due to time constraints, I soon found a new and exciting opportunity. In summer, I joined the [opendal](https://github.com/apache/opendal) community, where I made substantial contributions, including developing a [Go-binding](https://github.com/apache/opendal/issues/4892) for the project. I shared my experience in a technical post about [bridging Rust and Go code](https://blog.yuchanns.xyz/posts/bridging-rust-and-native-go/), which garnered significant attention. My efforts were recognized when I was appointed as a committer and invited to join the Apache organization - undoubtedly my proudest **coding achievement** of 2024.
 
-![Raised a 10K reading of the post](https://github.com/user-attachments/assets/d54be2d6-67a8-4c25-8a49-d750e1bf5572)
+![Raised a 10K reading of the post](https://oss.yuchanns.xyz/images/photo_2025-01-24_12-45-53.jpg)
 
 I also contributed to [avante.nvim](https://github.com/yetone/avante.nvim), an innovative neovim plugin that emulates the Cursor IDE - a perfect project for this AI-driven era.
 
