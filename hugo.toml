@@ -25,7 +25,8 @@ leftAngleQuote = '&lsaquo;'
 [params]
 author = "Hanchin Hsieh"
 avatar = 'https://avatars.githubusercontent.com/u/25029451?s=400&u=0c7eaf9379b7ce31bc02843a9568fac73a77cd8f&v=4'
-desc = "AKA yuchanns. I'm a developer passionate about FOSS, and a big Fan of LiSA(織部 里沙). You can ask me about Go, CloudNative, Nvim, and Asahi Linux."
+desc = """AKA yuchanns, a developer with a passion for FOSS and a huge fan of LiSA (織部 里沙).
+The creator and maintainer of the [Go Binding for Apache OpenDAL](https://github.com/apache/opendal/tree/main/bindings/go), and an [Emeritus](https://github.com/containerd/nerdctl/pull/3067) contributor to [nerdctl](https://github.com/containerd/nerdctl)."""
 twitter = '_yuchanns_'
 
 [outputFormats]

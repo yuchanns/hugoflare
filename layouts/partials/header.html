@@ -7,6 +7,6 @@
     src='{{ site.Param "avatar" }}'
     alt='{{ site.Title }}'
   ></image>
-  <div>{{ site.Param "desc" }}</div>
+  <div>{{ site.Param "desc" | markdownify }}</div>
 </p>
 <hr />
