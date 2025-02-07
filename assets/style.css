@@ -110,7 +110,8 @@ pre > code {
     word-break: break-word;
     overflow-wrap: break-word;
     position: relative;
-    font-family: var(--font-family);
+    font-family: monospace;
+    line-height: 1.25;
 }
 
 code:not([class^="language-"])::before {
