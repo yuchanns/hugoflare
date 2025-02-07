@@ -43,11 +43,11 @@ a.title:visited {
 }
 
 a:not(.button, .action, .title):visited {
-    color: #f6821f;
+    color: #902000;
 }
 
 a:not(.button, .action, .title) {
-    color: #f6821f;
+    color: #902000;
 }
 
 table {
