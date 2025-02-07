@@ -5,7 +5,8 @@ summaryLength = 10
 paginate = 5
 
 [markup.highlight]
-style = "algol_nu"
+style = "friendly"
+noClasses = false
 [markup.goldmark.parser.attribute]
 block = true
 [markup.goldmark.extensions.typographer]

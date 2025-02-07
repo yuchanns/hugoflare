@@ -79,7 +79,7 @@ In short, the idea is to link constrained Rust code and call it within a layer o
 
 It is brilliant, you can check it out if you like. The major concern is that it relies on some glue of assembly and it is too complicated to me. Imagine that you have to write a bunch of ASM for each method and multiply each platform, that is insanity:<br>
 
-```plaintext
+```asm
 TEXT ·ScalarBaseMult(SB), 0, $16384-16
 	MOVQ dst+0(FP), DI
 	MOVQ in+8(FP), SI
