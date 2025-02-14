@@ -1,0 +1,36 @@
+{{- $url := .Destination -}}
+{{- $parsed := urls.Parse $url -}}
+{{- if and (eq $parsed.Host "github.com") (eq .PlainText $url) -}}
+  {{- $path := split (trim $parsed.Path "/") "/" -}}
+  {{- $owner := index $path 0 -}}
+  {{- $repo := index $path 1 -}}
+  {{- $api_url := printf "https://api.github.com/repos/%s/%s" $owner $repo -}}
+  {{- $repo_data := dict -}}
+  {{- $ghToken := os.Getenv "HUGO_GITHUB_TOKEN" -}}
+  {{- $headers := dict 
+      "Accept" "application/vnd.github.v3+json"
+      "User-Agent" "Hugo Static Site Generator"
+      "Authorization" (printf "Bearer %s" $ghToken)
+  -}}
+  {{- with resources.GetRemote $api_url (dict "headers" $headers) -}}
+    {{- $repo_data = .Content | transform.Unmarshal -}}
+  {{- end -}}
+  <div class="github-card-wrapper">
+    <div class="github-card">
+      <a href="{{ $url }}" target="_blank" rel="noopener noreferrer">
+        <div class="github-card-header">
+          <div class="github-card-title">
+            <img src="{{ $repo_data.owner.avatar_url }}" alt="{{ $repo_data.owner.login }}" class="github-avatar">
+            <h3>{{ $owner }}/{{ $repo }}</h3>
+          </div>
+          <div class="github-octocat"></div>
+        </div>
+        <div class="github-card-body">
+          <span class="github-description">{{ $repo_data.description }}</span>
+        </div>
+      </a>
+    </div>
+  </div>
+{{- else -}}
+  <a href="{{ .Destination | safeURL }}"{{ with .Title}} title="{{ . }}"{{ end }}{{ if strings.HasPrefix .Destination "http" }} target="_blank" rel="noopener"{{ end }}>{{ .Text | safeHTML }}</a>
+{{- end -}}

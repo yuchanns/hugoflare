@@ -2,7 +2,16 @@ baseURL = '/'
 languageCode = 'en-us'
 title = 'Blockflare'
 summaryLength = 10
-paginate = 5
+ignoreLogs = ['warning-goldmark-raw-html']
+
+[pagination]
+pagerSize = 5
+
+[security]
+enableInlineShortcodes = false
+[security.http]
+mediaTypes = ["application/json"]
+methods = ["GET"]
 
 [markup.highlight]
 style = "friendly"

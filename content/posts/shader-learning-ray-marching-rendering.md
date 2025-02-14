@@ -6,7 +6,7 @@ draft = false
 
 > Warning: 以下内容由 AI 总结生成。是我个人在学习过程中的问答思考。可能会有错误,请酌情参考。
 
-> [源码](https://github.com/yuchanns/shader_playground/blob/main/sphere_bloom_mouse_light.frag)
+https://github.com/yuchanns/shader_playground/blob/main/sphere_bloom_mouse_light.frag
 
 在学习 shader 编程的过程中,我深入研究了光线步进(Ray Marching)这种渲染技术。这篇文章将总结我对这个主题的理解。
 
