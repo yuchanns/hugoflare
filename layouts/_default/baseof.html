@@ -3,7 +3,7 @@
 <head>
   {{ partial "head.html" . }}
 </head>
-<body>
+<body hx-boost="true">
   {{ block "main" . }}{{ end }}
   {{ $htmx := resources.Get "htmx.js" | js.Build "htmx.js" | minify | fingerprint }}
   <script src="{{ $htmx.RelPermalink }}" ></script>
