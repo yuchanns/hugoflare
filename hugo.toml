@@ -37,6 +37,14 @@ avatar = 'https://avatars.githubusercontent.com/u/25029451?s=400&u=0c7eaf9379b7c
 desc = """AKA yuchanns, a developer with a passion for FOSS and a huge fan of LiSA (織部 里沙).
 The creator and maintainer of the [Go Binding for Apache OpenDAL](https://github.com/apache/opendal/tree/main/bindings/go), and an [Emeritus](https://github.com/containerd/nerdctl/pull/3067) contributor to [nerdctl](https://github.com/containerd/nerdctl)."""
 twitter = '_yuchanns_'
+[params.pwa]
+debug = true
+[[params.pwa.precaches]]
+url = "/"
+[params.pwa.caches.image]
+origins = ["oss.yuchanns.xyz", "avatars.githubusercontent.com", "blog.yuchanns.xyz"]
+[params.pwa.caches.script]
+origins = ["https://giscus.app", "blog.yuchanns.xyz"]
 
 [outputFormats]
 [outputFormats.RSS]
@@ -46,13 +54,6 @@ baseName = "rss"
 [module]
 [[module.imports]]
 path = 'github.com/hugomods/pwa'
-
-[params.pwa]
-debug = true
-
-# Precache pages.
-[[params.pwa.precaches]]
-url = "/"
 
 [outputs]
 home = ['HTML', 'RSS', 'Offline', 'WebAppManifest']
