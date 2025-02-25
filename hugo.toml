@@ -42,3 +42,17 @@ twitter = '_yuchanns_'
 [outputFormats.RSS]
 mediatype = "application/rss"
 baseName = "rss"
+
+[module]
+[[module.imports]]
+path = 'github.com/hugomods/pwa'
+
+[params.pwa]
+debug = true
+
+# Precache pages.
+[[params.pwa.precaches]]
+url = "/"
+
+[outputs]
+home = ['HTML', 'RSS', 'Offline', 'WebAppManifest']

@@ -5,7 +5,6 @@
 </head>
 <body hx-boost="true">
   {{ block "main" . }}{{ end }}
-  {{ $htmx := resources.Get "htmx.js" | js.Build "htmx.js" | minify | fingerprint }}
-  <script src="{{ $htmx.RelPermalink }}" ></script>
+  {{ partialCached "pwa/assets/sw" . }}
 </body>
 </html>

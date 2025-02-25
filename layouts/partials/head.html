@@ -19,8 +19,13 @@
 <meta name="description" content='{{ .Summary }}' />
 <meta name="twitter:description" content='{{ .Summary }}' />
 {{ end }}
+{{ partialCached "pwa/assets/meta" . }}
 {{ $style := resources.Get "style.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $style.RelPermalink }}">
+{{ $htmx := resources.Get "htmx.js" | js.Build "htmx.js" | minify | fingerprint }}
+<script src="{{ $htmx.RelPermalink }}" defer></script>
+{{ partial "pwa/functions/precache" (dict "URL" $style.RelPermalink "Page" .) }}
+{{ partial "pwa/functions/precache" (dict "URL" $htmx.RelPermalink "Page" .) }}
 {{ if .IsHome }}
 <title>Home|{{ .Site.Title }}</title>
 {{ else }}
