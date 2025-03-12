@@ -1,81 +1,82 @@
 +++
-title = '学习 Shader 系列一: 理解光线步进渲染'
+title = 'Shader Learning Series Part 1: Understanding Ray Marching Rendering'
 date = 2025-02-14T15:52:54+08:00
 draft = false
 +++
 
-> Warning: 以下内容由 AI 总结生成。是我个人在学习过程中的问答思考。可能会有错误,请酌情参考。
+> Warning: The following content is generated and summarized by AI. It represents my personal learning journey and thought process. There might be inaccuracies, please use it as a reference with discretion.
 
 https://github.com/yuchanns/shader_playground/blob/main/sphere_bloom_mouse_light.frag
 
-在学习 shader 编程的过程中,我深入研究了光线步进(Ray Marching)这种渲染技术。这篇文章将总结我对这个主题的理解。
+During my journey learning shader programming, I delved deep into Ray Marching, a fascinating rendering technique. This article summarizes my understanding of this topic.
 
-## 光线步进的基本原理
+## Basic Principles of Ray Marching
 
-光线步进是一种用于渲染 3D 场景的算法,它是光线追踪的一个变体。其基本思想是:
+Ray Marching is an algorithm for rendering 3D scenes and is a variant of ray tracing. Its fundamental concept involves:
 
-1. 从相机(视点)发射光线
-2. 沿着光线方向以可变步长前进
-3. 在每一步计算到场景中最近物体的距离（称为距离场或SDF）
-4. 如果距离小于某个阈值，认为"击中"了物体，停止步进
-5. 对击中点计算该点的法线、光照等信息
+1. Emitting rays from the camera (viewpoint)
+2. Advancing along the ray direction with variable step sizes
+3. Calculating the distance to the nearest object in the scene at each step (known as distance field or SDF)
+4. Stopping the march when the distance is below a certain threshold, indicating a "hit"
+5. Computing surface normals, lighting, and other properties at the hit point
 
-## 关键概念
+## Key Concepts
 
 ### 1. ro (Ray Origin)
 
-`ro` 表示光线的起点,也就是相机的位置。在我们的例子中:
+`ro` represents the starting point of the ray, which is the camera position. In our example:
 
 ```glsl
 vec3 ro = vec3(0.0, 0.0, -3.0);
 ```
 
-这意味着相机位于 z=-3 的位置,正对着场景中心。
+This means the camera is positioned at z=-3, facing the center of the scene.
 
 ### 2. rd (Ray Direction)
 
-`rd` 表示光线的方向向量。它是通过每个像素的 UV 坐标计算得出的:
+`rd` represents the ray direction vector. It's calculated using the UV coordinates of each pixel:
 
 ```glsl
 vec3 rd = normalize(vec3(uv * 2.0 - 1.0, 1.0));
 ```
 
-这个计算为每个像素创建了一个独特的光线方向。视角的大小可以通过调整这个计算来改变。
+This calculation creates a unique ray direction for each pixel. The field of view can be adjusted by modifying this calculation.
 
-### 3. 步进过程
+### 3. Marching Process
 
-步进过程是在一个循环中完成的:
+The marching process occurs in a loop:
 
 ```glsl
 vec3 p = ro + rd * t;
 ```
 
-这里 `p` 是当前检查的 3D 空间中的点,`t` 是从起点走的距离。
+Here, `p` is the current point being examined in 3D space, and `t` is the distance traveled from the starting point.
 
-### 4. 距离场 (SDF)
+### 4. Distance Field (SDF)
 
-光线步进渲染中的一个核心概念是Signed Distance Function (SDF)。SDF是一个函数，它接受一个3D点作为输入，返回该点到场景中最近物体表面的距离。这个距离是有符号的：物体内部为负，外部为正。
+A core concept in ray marching is the Signed Distance Function (SDF). An SDF takes a 3D point as input and returns the distance to the nearest object surface in the scene. This distance is signed: negative inside objects and positive outside.
 
-## 渲染过程
+## Rendering Process
 
-1. 对于屏幕上的每个像素,我们发射一条光线。
-2. 沿着光线方向一步步前进,在每一步使用SDF计算到最近物体的距离。
-3. 如果距离小于某个阈值，认为"击中"了物体，停止步进。
-4. 对击中点计算该点的法线、光照效果等。
-5. 最后,我们根据击中点的信息计算出一个颜色值。
-6. 这个颜色值才是最终显示在像素上的内容。
+1. For each pixel on the screen, we emit a ray.
+2. March along the ray direction step by step, using the SDF to calculate the distance to the nearest object at each step.
+3. When the distance falls below a threshold, we consider it a "hit" and stop marching.
+4. Calculate surface normals, lighting effects, and other properties at the hit point.
+5. Based on the hit point information, compute a color value.
+6. This color value becomes the final pixel color displayed on screen.
 
-## 性能考虑
+## Performance Considerations
 
-光线步进渲染的性能主要取决于场景复杂度和步进的精度。一些常见的优化技巧包括：
+The performance of ray marching rendering primarily depends on scene complexity and marching precision. Common optimization techniques include:
 
-1. 自适应步长：根据到最近物体的距离动态调整步长。
-2. 早期射线终止：当累积的不透明度达到某个阈值时停止步进。
-3. 空间分区：使用八叉树等数据结构来加速空间查询。
-4. 并行计算：利用GPU的并行处理能力，同时计算多个像素。
+1. Adaptive Step Size: Dynamically adjust step size based on the distance to the nearest object.
+2. Early Ray Termination: Stop marching when accumulated opacity reaches a threshold.
+3. Spatial Partitioning: Use data structures like octrees to accelerate spatial queries.
+4. Parallel Computing: Leverage GPU's parallel processing capabilities to compute multiple pixels simultaneously.
 
-这些技巧可以显著提高渲染效率，特别是在复杂场景中。
+These techniques can significantly improve rendering efficiency, especially in complex scenes.
 
-## 结语
+## Conclusion
 
-理解光线步进算法让我对 shader 编程有了更深入的认识。它不仅是一种渲染技术,更是一种思考 3D 空间和光线交互的方式。在接下来的学习中,我会继续探索更多 shader 相关的主题,敬请期待！
+Understanding the ray marching algorithm has deepened my knowledge of shader programming. It's not just a rendering technique but a way of thinking about 3D space and light interaction. In my upcoming studies, I'll continue to explore more shader-related topics, so stay tuned!
+
