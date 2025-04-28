@@ -2,6 +2,15 @@
 <html lang="{{ or site.Language.LanguageCode }}" dir="{{ or site.Language.LanguageDirection `ltr` }}">
 <head>
   {{ partial "head.html" . }}
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true });
+    document.body.addEventListener('htmx:afterSwap', function(evt) {
+      mermaid.run({
+        querySelector: '.mermaid'
+      });
+    });
+  </script>
 </head>
 <body hx-boost="true">
   {{ block "main" . }}{{ end }}
