@@ -27,7 +27,7 @@
 {{ partial "pwa/functions/precache" (dict "URL" $style.RelPermalink "Page" .) }}
 {{ partial "pwa/functions/precache" (dict "URL" $htmx.RelPermalink "Page" .) }}
 {{ if .IsHome }}
-<title>Home|{{ .Site.Title }}</title>
+<title>Home | {{ .Site.Title }}</title>
 {{ else }}
-<title>{{ .Title }}|{{ .Site.Title }}</title>
+<title>{{ .Title }} | {{ .Site.Title }}</title>
 {{ end }}

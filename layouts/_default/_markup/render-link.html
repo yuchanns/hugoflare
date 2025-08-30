@@ -1,12 +1,12 @@
 {{- $url := .Destination -}}
+{{- $ghToken := os.Getenv "HUGO_GITHUB_TOKEN" -}}
 {{- $parsed := urls.Parse $url -}}
-{{- if and (eq $parsed.Host "github.com") (eq .PlainText $url) -}}
+{{- if and (eq $parsed.Host "github.com") (eq .PlainText $url) (ne $ghToken "") -}}
   {{- $path := split (trim $parsed.Path "/") "/" -}}
   {{- $owner := index $path 0 -}}
   {{- $repo := index $path 1 -}}
   {{- $api_url := printf "https://api.github.com/repos/%s/%s" $owner $repo -}}
   {{- $repo_data := dict -}}
-  {{- $ghToken := os.Getenv "HUGO_GITHUB_TOKEN" -}}
   {{- $headers := dict 
       "Accept" "application/vnd.github.v3+json"
       "User-Agent" "Hugo Static Site Generator"
