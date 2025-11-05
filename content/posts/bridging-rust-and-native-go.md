@@ -9,6 +9,8 @@ Hello everyone, yuchanns here!<br>
 
 I recently built something interesting and want to share it with you: introducing OpenDAL as a native Go binding.<br>
 
+<!--more-->
+
 <b>TLDR;</b> I'll show you a feasible way to build native Go bindings from Rust and C components with the magic power of purego and libffi behinds.<br>
 
 ##  What is OpenDAL?

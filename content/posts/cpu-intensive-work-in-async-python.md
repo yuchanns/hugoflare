@@ -7,6 +7,8 @@ draft = false
 这篇算是书接上文 [Python Web 框架中的后台任务](/posts/background-tasks-in-python-web)，继续讨论在
 Python 中如何处理 CPU 密集型工作。
 
+<!--more-->
+
 ## 背景
 
 我们组有个 python 服务，里面有一些机器学习的功能，例如人脸识别和 ocr 还有音频分析等。这些任务用到的通常都是阻塞性的 api。现在我是通过 twsited 将它们创建成单独的线程或进程。但是我更想结合最近实践到的 fastapi 和 lifespan 来管理。

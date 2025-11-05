@@ -1,10 +1,12 @@
 +++
 title = 'Shader Learning Series Part 1: Understanding Ray Marching Rendering'
 date = 2025-02-14T15:52:54+08:00
-draft = false
+draft = true
 +++
 
 > Warning: The following content is generated and summarized by AI. It represents my personal learning journey and thought process. There might be inaccuracies, please use it as a reference with discretion.
+
+<!--more-->
 
 https://github.com/yuchanns/shader_playground/blob/main/sphere_bloom_mouse_light.frag
 

@@ -6,6 +6,8 @@ draft = false
 
 After a two-year hiatus from writing recaps (I skipped 2023 as there wasn't much to highlight), I'm finally back to share my journey through 2024.
 
+<!--more-->
+
 What a transformative year it has been! My life has undergone significant changes, and I'm excited to share them with you.
 
 ## Life

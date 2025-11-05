@@ -8,6 +8,8 @@ draft = false
 
 **tl;dr:** If you want to just know the method, skip to `How to` section
 
+<!--more-->
+
 Clangd is a state-of-the-art C/C++ LSP that can be used in every popular text editors like Neovim, Emacs or VS Code. Even CLion uses clangd under the hood. Unfortunately, clangd requires `compile_commands.json` to work, and the easiest way to painlessly generate it is to use CMake.
 
 For simple projects you can try to use [Bear](https://github.com/rizsotto/Bear) - it will capture compile commands and generate `compile_commands.json`. Although I could never make it work in big projects with custom or complicated build systems.

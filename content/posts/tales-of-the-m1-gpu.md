@@ -8,6 +8,8 @@ aliases = ["/post/773516f4-ec40-474e-9c9f-9f96398c9e3e"]
 
 marcan 让我写一篇关于 M1 GPU 的文章，所以我们在此见面了～！在过去的几个月里，我们走过了漫长的道路，有许多内容要讲。我希望你们能喜欢！
 
+<!--more-->
+
 ![Xonotic running on an Apple M2](https://oss.yuchanns.xyz/images/image_627553df-9b54-4142-babf-995c046d82c9.png)
 
 ##  什么是 GPU ?

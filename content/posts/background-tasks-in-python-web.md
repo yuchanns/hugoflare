@@ -6,6 +6,8 @@ draft = false
 
 几个月前在开发一个 Python Web 项目时，我希望能像 Go 项目那样，在 Web 服务启动时就能同时运行一些后台任务。这让我开始寻找 Python 中的最佳实践方案。
 
+<!--more-->
+
 ### 初次尝试：FastAPI 的 BackgroundTask
 
 最初，有推友建议使用 FastAPI 的 BackgroundTask 特性。但研究后发现，这个特性主要是用于在 HTTP 请求结束后执行一些清理或后续处理工作：

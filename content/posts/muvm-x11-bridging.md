@@ -8,6 +8,7 @@ draft = false
 
 大家好！我们刚刚在 Asahi Linux 的 x86/x86-64 模拟技术栈上发布了一个非常酷的更新, 我想分享一下我们一直在做的工作. 从今天开始, 非游戏应用程序现在可以使用了！
 
+<!--more-->
 
 ![在 Fedora Asahi Remix 上运行的 Cisco Packet Tracer](https://asahilinux.org/img/blog/2024/12/cisco-pt.png)
 

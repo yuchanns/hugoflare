@@ -6,6 +6,8 @@ draft = false
 
 This year's recap focuses on the latter half of the year, as the first half was uneventful and filled with lockdowns and daily nucleic acid tests in Futian, Shenzhen. At that time, life felt dull and hopeless.
 
+<!--more-->
+
 If someone had told me then that my year would become fulfilling and exciting, I would have scoffed.
 
 ##  Open Source Life 

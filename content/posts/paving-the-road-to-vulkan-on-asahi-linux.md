@@ -9,6 +9,8 @@ aliases = ["/post/dbcb370f-f455-4c04-8d10-ede1e3544383"]
 
 你们可能已经知道了，我和 Asahi Linux 团队的其他成员一起为 Apple Silicon 平台开发开源 GPU 驱动程序。这真是一段惊险刺激的旅程！去年底我们[发布](https://asahilinux.org/2022/12/gpu-drivers-now-in-asahi-linux/)了第一个版本的驱动程序，在多个月的逆向工程和开发后终于完成。但那只是开始……
 
+<!--more-->
+
 今天我们为 Asahi Linux 发布了一个重大更新，所以我想跟大家谈谈自那时以来我们都在做些什么，并展望未来！
 
 如果这是你第一次听说我们的 GPU 冒险，请先查看我的[[关于 M1 GPU 的故事|tales-of-the-m1-gpu]]文章，它涵盖了我去年所做的内容！还有不要错过 Alyssa 在[她网站](https://rosenzweig.io/)上撰写的精彩系列文章，从2021年1月开始追溯到现在！^^

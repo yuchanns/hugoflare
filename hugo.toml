@@ -1,7 +1,6 @@
 baseURL = '/'
 languageCode = 'en-us'
 title = 'Blockflare'
-summaryLength = 10
 ignoreLogs = ['warning-goldmark-raw-html']
 
 [pagination]
