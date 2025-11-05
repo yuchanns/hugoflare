@@ -1,6 +1,25 @@
+{{- $arial := resources.Get "arial.ttf" -}}
+{{- $sourceHan := resources.Get "SourceHanSansSC-Regular.ttf" -}}
+
+@font-face {
+    font-family: 'Arial';
+    src: url('{{ $arial.RelPermalink }}') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Source Han Sans SC Regular';
+    src: url('{{ $sourceHan.RelPermalink }}') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
 :root {
     --border-bottom-color: #737373;
-    --font-family: Cantarell,sans-serif;
+    --font-family: 'Source Han Sans SC Regular','Arial',sans-serif;
 }
 
 :root {
