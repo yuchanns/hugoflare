@@ -127,12 +127,6 @@ input[type=password] {
     color: var(--text-color);
 }
 
-.highlight {
-    padding-left: calc(10% - 2em);
-    font-size: 100%;
-    background-color: var(--highlight-bg);
-}
-
 ul {
     list-style-type: disc;
     margin-top: 1.25em;
@@ -164,26 +158,27 @@ pre > code {
     word-break: break-word;
     overflow-wrap: break-word;
     position: relative;
-    font-size: 70%;
+    font-size: 85%;
     font-family: monospace;
     line-height: 1.5;
     color: var(--text-color);
 }
 
-code:not([class^="language-"])::before {
+:not(pre) > code:not([class^="language-"])::before {
     content: "`";
 }
 
-code:not([class^="language-"])::after {
+:not(pre) > code:not([class^="language-"])::after {
     content: "`";
 }
 
-code:not([class^="language-"]) {
+:not(pre) > code:not([class^="language-"]) {
     font-weight: 600;
     font-family: var(--font-family);
     background-color: var(--highlight-bg);
     padding: 0.2em 0.4em;
     border-radius: 3px;
+    font-size: 90%;
 }
 
 img {
@@ -319,7 +314,7 @@ figure > figcaption {
 }
 
 /* Background */ .bg { background-color: var(--code-bg); }
-/* PreWrapper */ .chroma { background-color:transparent; }
+/* PreWrapper */ .chroma { background-color:var(--code-bg); }
 /* Other */ .chroma .x {  }
 /* Error */ .chroma .err {  }
 /* CodeLine */ .chroma .cl {  }
