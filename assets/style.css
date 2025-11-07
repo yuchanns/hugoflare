@@ -81,6 +81,7 @@ a.title {
     text-decoration: underline;
     font-weight: bold;
     cursor: pointer;
+    color: var(--link-color);
 }
 
 a.button {
@@ -88,13 +89,8 @@ a.button {
     cursor: pointer;
 }
 
-a.title {
-    text-decoration: none;
-    color: var(--title-color);
-}
-
 a.title:visited {
-    color: var(--title-color);
+    color: var(--link-color);
 }
 
 a:not(.button, .action, .title):visited {
