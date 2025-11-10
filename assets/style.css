@@ -79,9 +79,9 @@ a.action {
 
 a.title {
     text-decoration: underline;
-    font-weight: bold;
     cursor: pointer;
-    color: var(--link-color);
+    color: var(--text-color);
+    text-underline-offset: 4px;
 }
 
 a.button {
@@ -90,7 +90,7 @@ a.button {
 }
 
 a.title:visited {
-    color: var(--link-color);
+    color: var(--text-color);
 }
 
 a:not(.button, .action, .title):visited {
@@ -174,7 +174,7 @@ pre > code {
     overflow-wrap: break-word;
     position: relative;
     font-size: 85%;
-    font-family: monospace;
+    font-family: var(--font-family);
     line-height: 1.5;
     color: var(--text-color);
 }
@@ -188,7 +188,6 @@ pre > code {
 }
 
 :not(pre) > code:not([class^="language-"]) {
-    font-weight: 600;
     font-family: var(--font-family);
     background-color: var(--highlight-bg);
     padding: 0.2em 0.4em;
