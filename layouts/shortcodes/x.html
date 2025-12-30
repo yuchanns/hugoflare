@@ -14,10 +14,16 @@
 {{- end -}}
 
 {{- define "render-x" -}}
+  {{- $root := . -}}
   {{- $url := printf "https://x.com/%v/status/%v" .user .id -}}
-  {{- $query := querify "url" $url "dnt" .dnt -}}
-  {{- $request := printf "https://publish.x.com/oembed?%s" $query -}}
-  {{- with try (resources.GetRemote $request) -}}
+  {{- $lightQuery := querify "url" $url "dnt" .dnt -}}
+  {{- $darkQuery := querify "url" $url "dnt" .dnt "theme" "dark" -}}
+  {{- $lightRequest := printf "https://publish.x.com/oembed?%s" $lightQuery -}}
+  {{- $darkRequest := printf "https://publish.x.com/oembed?%s" $darkQuery -}}
+  {{- $lightHTML := "" -}}
+  {{- $darkHTML := "" -}}
+
+  {{- with try (resources.GetRemote $lightRequest) -}}
     {{- with .Err -}}
       {{- errorf "%s" . -}}
     {{- else with .Value -}}
@@ -26,14 +32,60 @@
           {{- errorf "%s" . -}}
         {{- else -}}
           {{- with .Value.html -}}
-            {{- . | safeHTML -}}
+            {{- $lightHTML = . -}}
           {{- else -}}
-            {{- warnidf "shortcode-x-unmarshal" "The %q shortcode did not return an html field. See %s" $.ctx.Name $.ctx.Position -}}
+            {{- warnidf "shortcode-x-unmarshal" "The %q shortcode did not return an html field. See %s" $root.ctx.Name $root.ctx.Position -}}
           {{- end -}}
         {{- end -}}
       {{- end -}}
     {{- else -}}
-      {{- warnidf "shortcode-x-getremote" "The %q shortcode was unable to retrieve the remote data. See %s" $.ctx.Name $.ctx.Position -}}
+      {{- warnidf "shortcode-x-getremote" "The %q shortcode was unable to retrieve the remote data. See %s" $root.ctx.Name $root.ctx.Position -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if $lightHTML -}}
+    {{- with try (resources.GetRemote $darkRequest) -}}
+      {{- with .Err -}}
+        {{- warnidf "shortcode-x-getremote-dark" "The %q shortcode could not retrieve the dark theme. See %s" $root.ctx.Name $root.ctx.Position -}}
+      {{- else with .Value -}}
+        {{- with try (transform.Unmarshal (.Content)) -}}
+          {{- with .Err -}}
+            {{- warnidf "shortcode-x-unmarshal-dark" "The %q shortcode could not parse the dark theme response. See %s" $root.ctx.Name $root.ctx.Position -}}
+          {{- else -}}
+            {{- with .Value.html -}}
+              {{- $darkHTML = . -}}
+            {{- else -}}
+              {{- warnidf "shortcode-x-unmarshal-dark" "The %q shortcode did not return an html field for the dark theme. See %s" $root.ctx.Name $root.ctx.Position -}}
+            {{- end -}}
+          {{- end -}}
+        {{- end -}}
+      {{- else -}}
+        {{- warnidf "shortcode-x-getremote-dark" "The %q shortcode could not retrieve the dark theme. See %s" $root.ctx.Name $root.ctx.Position -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- if and $darkHTML ($root.ctx.Page) -}}
+      {{- $scratch := $root.ctx.Page.Scratch -}}
+      {{- if not ($scratch.Get "x-embed-theme-style") -}}
+        {{- $scratch.Set "x-embed-theme-style" true -}}
+        <style>
+          .x-embed-theme__dark { display: none; }
+          @media (prefers-color-scheme: dark) {
+            .x-embed-theme__light { display: none; }
+            .x-embed-theme__dark { display: block; }
+          }
+        </style>
+      {{- end -}}
+      <div class="x-embed-theme">
+        <div class="x-embed-theme__light">
+          {{- $lightHTML | safeHTML -}}
+        </div>
+        <div class="x-embed-theme__dark">
+          {{- $darkHTML | safeHTML -}}
+        </div>
+      </div>
+    {{- else -}}
+      {{- $lightHTML | safeHTML -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
