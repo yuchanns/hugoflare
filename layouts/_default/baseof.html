@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ or site.Language.LanguageCode }}" dir="{{ or site.Language.LanguageDirection `ltr` }}">
-<head>
+<head hx-head="merge">
   {{ partial "head.html" . }}
   <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
@@ -12,7 +12,7 @@
     });
   </script>
 </head>
-<body hx-boost="true">
+<body hx-boost="true" hx-ext="head-support">
   {{ block "main" . }}{{ end }}
   {{ partialCached "pwa/assets/sw" . }}
 </body>

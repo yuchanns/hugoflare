@@ -1,31 +1,50 @@
+{{ $site := .Site }}
+{{ $avatar := site.Param "avatar" | default (printf "%sfavicon.ico" $site.BaseURL) | absURL }}
+{{ $twitterHandle := site.Param "twitter" }}
+{{ $descSource := "" }}
+{{ if .IsHome }}
+  {{ $descSource = site.Param "desc" }}
+{{ else if .Description }}
+  {{ $descSource = .Description }}
+{{ else if .Summary }}
+  {{ $descSource = .Summary }}
+{{ else }}
+  {{ $descSource = site.Param "desc" }}
+{{ end }}
+{{ $descCandidate := $descSource | default "" }}
+{{ $descPlain := printf "%s" ($descCandidate | plainify) }}
+{{ $descCondensed := $descPlain | replaceRE "\\s+" " " }}
+{{ $desc := $descCondensed | strings.TrimSpace }}
+{{ $pageURL := .Permalink }}
+{{ $ogType := cond .IsPage "article" "website" }}
+{{ $locale := replace ($site.Language.Lang | default "en-US") "-" "_" }}
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="icon" href='{{ site.Param "avatar" }}' >
+<link rel="icon" href="{{ $avatar }}">
+<link rel="canonical" href="{{ $pageURL }}">
+<meta property="og:site_name" content="{{ $site.Title }}" />
+<meta property="og:type" content="{{ $ogType }}" />
+<meta property="og:url" content="{{ $pageURL }}" />
+<meta property="og:locale" content="{{ $locale }}" />
+<meta property="og:title" content="{{ .Title }}" />
+{{ if $avatar }}<meta property="og:image" content="{{ $avatar }}" />{{ end }}
+<meta property="og:description" content="{{ $desc }}" />
+<meta name="description" content="{{ $desc }}" />
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:image" content='{{ site.Param "avatar" }}' />
-<meta name="twitter:site" content='@{{ site.Param "twitter" }}' />
 <meta name="twitter:title" content="{{ .Title }}" />
-{{ if .IsHome }}
-<meta name="twitter:description" content='{{ site.Param "desc" }}' />
-{{ else }}
-<meta name="twitter:description" content='{{ .Summary }}' />
-{{ end }}
-<meta name="og:image" content='{{ site.Param "avatar" }}' />
-<meta name="og:title" content="{{ .Title }}" />
-{{ if .IsHome }}
-<meta name="og:description" content='{{ site.Param "desc" }}' />
-<meta name="description" content='{{ site.Param "desc" }}' />
-{{ else }}
-<meta name="og:description" content='{{ .Summary }}' />
-<meta name="description" content='{{ .Summary }}' />
-<meta name="twitter:description" content='{{ .Summary }}' />
-{{ end }}
+{{ if $avatar }}<meta name="twitter:image" content="{{ $avatar }}" />{{ end }}
+<meta name="twitter:url" content="{{ $pageURL }}" />
+<meta name="twitter:description" content="{{ $desc }}" />
+{{ if $twitterHandle }}<meta name="twitter:site" content='@{{ $twitterHandle }}' />{{ end }}
 {{ partialCached "pwa/assets/meta" . }}
 {{ $style := resources.Get "style.css" | resources.ExecuteAsTemplate "style.css" . | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $style.RelPermalink }}">
-{{ $htmx := resources.Get "htmx.js" | js.Build "htmx.js" | minify | fingerprint }}
+{{ $htmx := resources.Get "htmx@1.9.12.js" | minify | fingerprint }}
+{{ $htmxHeadSupport := resources.Get "htmx-ext-head-support@1.9.12.js" | minify | fingerprint }}
 <script src="{{ $htmx.RelPermalink }}" defer></script>
+<script src="{{ $htmxHeadSupport.RelPermalink }}" defer></script>
 {{ partial "pwa/functions/precache" (dict "URL" $style.RelPermalink "Page" .) }}
 {{ partial "pwa/functions/precache" (dict "URL" $htmx.RelPermalink "Page" .) }}
+{{ partial "pwa/functions/precache" (dict "URL" $htmxHeadSupport.RelPermalink "Page" .) }}
 {{ if .IsHome }}
 <title>Home | {{ .Site.Title }}</title>
 {{ else }}
