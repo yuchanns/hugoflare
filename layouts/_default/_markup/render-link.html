@@ -7,14 +7,25 @@
   {{- $repo := index $path 1 -}}
   {{- $api_url := printf "https://api.github.com/repos/%s/%s" $owner $repo -}}
   {{- $repo_data := dict -}}
+  {{- $repo_ok := false -}}
   {{- $headers := dict 
       "Accept" "application/vnd.github.v3+json"
       "User-Agent" "Hugo Static Site Generator"
       "Authorization" (printf "Bearer %s" $ghToken)
   -}}
-  {{- with resources.GetRemote $api_url (dict "headers" $headers) -}}
-    {{- $repo_data = .Content | transform.Unmarshal -}}
+  {{- with try (resources.GetRemote $api_url (dict "headers" $headers)) -}}
+    {{- with .Err -}}
+    {{- else with .Value -}}
+      {{- with try (transform.Unmarshal (.Content)) -}}
+        {{- with .Err -}}
+        {{- else -}}
+          {{- $repo_data = .Value -}}
+          {{- $repo_ok = true -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
   {{- end -}}
+  {{- if $repo_ok -}}
   <div class="github-card-wrapper">
     <div class="github-card">
       <a href="{{ $url }}" target="_blank" rel="noopener noreferrer">
@@ -31,6 +42,9 @@
       </a>
     </div>
   </div>
+  {{- else -}}
+  <a href="{{ .Destination | safeURL }}"{{ with .Title}} title="{{ . }}"{{ end }}{{ if strings.HasPrefix .Destination "http" }} target="_blank" rel="noopener"{{ end }}>{{ .Text | safeHTML }}</a>
+  {{- end -}}
 {{- else -}}
   <a href="{{ .Destination | safeURL }}"{{ with .Title}} title="{{ . }}"{{ end }}{{ if strings.HasPrefix .Destination "http" }} target="_blank" rel="noopener"{{ end }}>{{ .Text | safeHTML }}</a>
 {{- end -}}

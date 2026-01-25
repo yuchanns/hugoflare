@@ -3,12 +3,28 @@
 <head hx-head="merge">
   {{ partial "head.html" . }}
   <script type="module">
-    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
-    mermaid.initialize({ startOnLoad: true });
-
     const TWITTER_WIDGETS_SRC = 'https://platform.twitter.com/widgets.js';
+    let mermaidLoader = null;
 
-    const runMermaid = () => {
+    const loadMermaid = () => {
+      if (mermaidLoader) return mermaidLoader;
+      mermaidLoader = import('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs')
+        .then((mod) => {
+          const mermaid = mod.default;
+          mermaid.initialize({ startOnLoad: true });
+          return mermaid;
+        })
+        .catch((err) => {
+          console.warn('Mermaid failed to load', err);
+          return null;
+        });
+      return mermaidLoader;
+    };
+
+    const runMermaid = async () => {
+      if (!document.querySelector('.mermaid')) return;
+      const mermaid = await loadMermaid();
+      if (!mermaid) return;
       mermaid.run({
         querySelector: '.mermaid'
       });
@@ -49,6 +65,7 @@
       loadTwitterWidgets(evt.target);
     });
 
+    runMermaid();
     loadTwitterWidgets(document);
   </script>
 </head>

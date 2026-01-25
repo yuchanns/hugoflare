@@ -1,7 +1,6 @@
 baseURL = '/'
 languageCode = 'en-us'
 title = 'Blockflare'
-ignoreLogs = ['warning-goldmark-raw-html']
 disableKinds = ['taxonomy', 'term', 'section']
 
 [pagination]
@@ -18,6 +17,8 @@ style = "friendly"
 noClasses = false
 [markup.goldmark.parser.attribute]
 block = true
+[markup.goldmark.renderer]
+unsafe = true
 [markup.goldmark.extensions.typographer]
 disable = false
 apostrophe = '&apos;'
@@ -50,7 +51,7 @@ origins = ["https://giscus.app", "blog.yuchanns.xyz"]
 
 [outputFormats]
 [outputFormats.RSS]
-mediatype = "application/rss"
+mediatype = "application/rss+xml"
 baseName = "rss"
 
 [module]

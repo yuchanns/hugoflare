@@ -33,4 +33,6 @@ lerna-debug.log*
 .DS_Store
 
 public
+resources/
+.hugo_build.lock
 jsconfig.json
