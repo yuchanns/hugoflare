@@ -5,11 +5,51 @@
   <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
     mermaid.initialize({ startOnLoad: true });
-    document.body.addEventListener('htmx:afterSwap', function(evt) {
+
+    const TWITTER_WIDGETS_SRC = 'https://platform.twitter.com/widgets.js';
+
+    const runMermaid = () => {
       mermaid.run({
         querySelector: '.mermaid'
       });
+    };
+
+    const loadTwitterWidgets = (root) => {
+      const container = root && root.querySelector ? root : document;
+      if (!container.querySelector('blockquote.twitter-tweet')) return;
+
+      const runWidgets = () => {
+        if (window.twttr && window.twttr.widgets) {
+          window.twttr.widgets.load(container);
+        }
+      };
+
+      if (window.twttr && window.twttr.widgets) {
+        runWidgets();
+        return;
+      }
+
+      const existing = document.querySelector('script[data-twitter-widgets]');
+      if (existing) {
+        existing.addEventListener('load', runWidgets, { once: true });
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = TWITTER_WIDGETS_SRC;
+      script.async = true;
+      script.defer = true;
+      script.setAttribute('data-twitter-widgets', 'true');
+      script.addEventListener('load', runWidgets, { once: true });
+      document.head.appendChild(script);
+    };
+
+    document.body.addEventListener('htmx:afterSwap', (evt) => {
+      runMermaid();
+      loadTwitterWidgets(evt.target);
     });
+
+    loadTwitterWidgets(document);
   </script>
 </head>
 <body hx-boost="true" hx-ext="head-support">
